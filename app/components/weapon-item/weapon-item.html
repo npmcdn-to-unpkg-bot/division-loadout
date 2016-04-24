@@ -1,0 +1,102 @@
+<div *ngIf="selectedBlueprint != null" class="division-card item-card">
+    <div class="division-card-header row" title="{{selectedBlueprint | json}}">
+
+        <i title="Change blueprint" (click)="resetBlueprint()" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+
+        <item-quality
+                [quality]="selectedBlueprint.quality">
+        </item-quality>
+
+        {{selectedBlueprint.name}}
+
+        <span class="pull-right">
+            <span title="Gearscore" >{{selectedBlueprint.gearscore}}</span>
+            <!-- <i title="Community blueprint rating" class="fa fa-star-o" aria-hidden="true"></i> -->
+        </span>
+    </div>
+    <!--
+    <img class="img-fluid" src="http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7TDlCYzRROE84YWM/materialdesign_introduction.png">
+ -->
+
+        <div class="row" style="text-align: center; ">
+
+            <native-box
+                    name="DPS"
+                    [value]="'150000'">
+            </native-box>
+
+            <native-box
+                    (click)="editingNatives = !editingNatives"
+                    name="Damage"
+                    [value]="getCurrentValue('weapon_base_dmg', 'native')">
+            </native-box>
+
+            <native-box
+                    (click)="editingNatives = !editingNatives"
+                    name="SPM"
+                    [value]="getCurrentValue('weapon_base_rpm', 'native')">
+            </native-box>
+
+            <native-box
+                    (click)="editingNatives = !editingNatives"
+                    name="Mag"
+                    [value]="getCurrentValue('weapon_base_mag', 'native')">
+            </native-box>
+        </div>
+
+
+    <!--<h7>Native
+        <i *ngIf="!editingNatives" title="Start edit-mode" (click)="editingNatives = true" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+        <i *ngIf="editingNatives" title="Stop edit-mode" (click)="editingNatives = false" class="fa fa-check edit-blueprint-icon" aria-hidden="true"></i>
+    </h7>
+     <ul *ngIf="!editingNatives" style="list-style: none; padding-left: 0;">
+        <li *ngFor="#attr of result.natives; #i = index">
+            <item-attribute
+                    [editing]="editingMinors"
+                    (myevent)="doSomething($event)"
+                    [attributeId]="attr[0]"
+                    [attributeValue]="attr[1]">
+            </item-attribute>
+        </li>
+    </ul> -->
+        <h7 *ngIf="editingNatives">Native</h7>
+        <ul *ngIf="editingNatives" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of getPossibleWeaponAttributes() ; #i = index">
+                <possible-item-attribute
+                        (onUpdate)="saveResultAttribute(attr, $event)"
+                        [currentValue]="getCurrentValueForAttribute(attr)"
+                        [possibleAttribute]="attr">
+                </possible-item-attribute>
+            </li>
+        </ul>
+
+
+
+    <weapon-attribute
+            attributeId="Stability"
+            [attributeValue]="getCurrentValue('weapon_stability', 'native')">
+    </weapon-attribute>
+    <weapon-attribute
+            attributeId="Accuracy"
+            [attributeValue]="getCurrentValue('weapon_accuracy', 'native')">
+    </weapon-attribute>
+    <weapon-attribute
+            attributeId="Range"
+            [attributeValue]="getCurrentValue('weapon_optimal_range', 'native')">
+    </weapon-attribute>
+    <weapon-attribute
+            attributeId="Reload Speed"
+            [attributeValue]="getCurrentValue('weapon_reload_speed', 'native')">
+    </weapon-attribute>
+
+    <weapon-mod
+            *ngFor="#slot of getPossibleWeaponMods()"
+            [possibleWeaponmodTypes]="slot">
+    </weapon-mod>
+</div>
+
+<select-blueprint
+        *ngIf="selectedBlueprint == null"
+        (onBlueprintSelected)="onBlueprintSelected($event)"
+        [itemSlotType]="itemSlotType">
+</select-blueprint>

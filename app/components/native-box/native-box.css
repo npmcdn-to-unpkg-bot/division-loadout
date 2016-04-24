@@ -1,0 +1,12 @@
+.native-box {
+    color: white;
+    text-align: center;
+    padding: 0;
+    display: inline-block;
+    padding: 5px;
+}
+
+.native-box:hover {
+    cursor: pointer;
+    background-color: rgba(255,255,255,0.2);
+}

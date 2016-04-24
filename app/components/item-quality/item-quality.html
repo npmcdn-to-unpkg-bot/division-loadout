@@ -1,0 +1,5 @@
+<span [ngSwitch]="quality">
+    <template [ngSwitchWhen]="'set'"><i class="fa fa-stop set-item-color" aria-hidden="true"></i></template>
+    <template [ngSwitchWhen]="'highend'"><i class="fa fa-stop yellow-item-color" aria-hidden="true"></i></template>
+    <template ngSwitchDefault><i class="fa fa-stop grey-item-color" aria-hidden="true"></i></template>
+</span>

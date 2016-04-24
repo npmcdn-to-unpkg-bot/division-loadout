@@ -1,0 +1,54 @@
+<div class="division-card summary-container row">
+
+    <h5> Primary </h5>
+    <ul style="list-style: none; padding-left: 0;">
+        <li *ngFor="#attr of getPrimarys()">
+            <item-attribute
+                    attributeId="{{attr[0]}}"
+                    [attributeValue]="attr[1]">
+            </item-attribute>
+        </li>
+    </ul>
+
+    <h5> Offense </h5>
+
+
+    <h5> Defense </h5>
+    <ul style="list-style: none; padding-left: 0;">
+        <li *ngFor="#attr of getDefense()">
+            <item-attribute
+                    attributeId="{{attr[0]}}"
+                    [attributeValue]="attr[1]">
+            </item-attribute>
+        </li>
+    </ul>
+
+    <h5> Resistances </h5>
+    <ul style="list-style: none; padding-left: 0;">
+        <li *ngFor="#attr of getResistances()">
+            <item-attribute
+                    attributeId="{{attr[0]}}"
+                    [attributeValue]="attr[1]">
+            </item-attribute>
+        </li>
+    </ul>
+
+    <h5> Skills </h5>
+    <ul style="list-style: none; padding-left: 0;">
+        <li *ngFor="#attr of getSkills()">
+            <item-attribute attributeId="{{attr[0]}}" [attributeValue]="attr[1]"></item-attribute>
+        </li>
+    </ul>
+
+    <h5> Active Sets </h5>
+
+    <h5> Misc </h5>
+    <ul style="list-style: none; padding-left: 0;">
+        <li *ngFor="#attr of getMisc()">
+            <item-attribute
+                    attributeId="{{attr[0]}}"
+                    [attributeValue]="attr[1]">
+            </item-attribute>
+        </li>
+    </ul>
+</div>

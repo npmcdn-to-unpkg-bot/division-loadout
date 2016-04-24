@@ -1,0 +1,30 @@
+.item-color {
+    border-radius: 2px;
+}
+
+.set-item-color {
+    background-color: #00cc99;
+    color: #00cc99;
+}
+
+.yellow-item-color {
+    background-color: yellow;
+    color: yellow;
+}
+
+.purple-item-color {
+    background-color: purple;
+    color: purple;
+}
+
+.blue-item-color {
+    background-color: blue;
+}
+
+.green-item-color {
+    background-color: green;
+}
+
+.grey-item-color {
+    background-color: grey;
+}

@@ -1,0 +1,12 @@
+<div class="row" style="color: white;">
+    <div class="gear-mod-container col-md-12">
+
+
+        <span class="edit-header-container" (click)="editing = !editing">
+            <i *ngIf="!editing" title="Start edit-mode" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+            <i *ngIf="editing" title="Stop edit-mode" class="fa fa-check edit-blueprint-icon" aria-hidden="true"></i>
+            Weapon Mod {{possibleWeaponmodTypes.name}}
+        </span>
+
+    </div>
+</div>

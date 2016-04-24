@@ -1,0 +1,29 @@
+<div class="row" style="color: white;">
+    <div class="gear-mod-container col-md-12">
+
+
+        <span class="edit-header-container" (click)="editing = !editing">
+            <i *ngIf="!editing" title="Start edit-mode" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+            <i *ngIf="editing" title="Stop edit-mode" class="fa fa-check edit-blueprint-icon" aria-hidden="true"></i>
+            Gear Mod
+        </span>
+        <ul *ngIf="!editing" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of result.mods; #i = index">
+                <item-attribute
+                        [editing]="editing"
+                        [attributeId]="attr[0]"
+                        [attributeValue]="attr[1]">
+                </item-attribute>
+            </li>
+        </ul>
+        <ul *ngIf="editing" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of getPossibleAttributes('major'); #i = index">
+                <possible-item-attribute
+                        (onUpdate)="saveResultAttribute(attr, $event)"
+                        [currentValue]="getCurrentValueForAttribute(attr)"
+                        [possibleAttribute]="attr">
+                </possible-item-attribute>
+            </li>
+        </ul>
+    </div>
+</div>

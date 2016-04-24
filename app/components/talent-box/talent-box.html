@@ -1,0 +1,15 @@
+<div class="row" style="color: white;">
+
+    <div *ngIf="!editing" (click)="editing = !editing">
+        <div *ngIf="selectedTalent != null">{{selectedTalent.attribute}}</div>
+        <div *ngIf="selectedTalent == null">No talent selected!</div>
+    </div>
+    <div *ngIf="editing">
+            <ul>
+                <li *ngFor="#talent of possibleTalents" (click)="selectTalent(talent)">
+                    {{talent.attribute}}
+                </li>
+            </ul>
+    </div>
+
+</div>

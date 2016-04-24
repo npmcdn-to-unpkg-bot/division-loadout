@@ -1,0 +1,29 @@
+<div class="row">
+
+    <!-- <button type="button" class="btn btn-secondary btn-sm col-md-1">-</button> -->
+    <input [(ngModel)]="checked"
+           type="checkbox"
+           value=""
+           (change)="onChange($event)"
+           class=" checkbox-item-attribute col-md-1">
+
+
+
+
+    <input *ngIf="checked"
+           type="number"
+           class="input-item-attribute col-md-2"
+           id="value"
+           min="{{possibleAttribute.min}}"
+           max="{{possibleAttribute.max}}"
+           step="{{possibleAttribute.step}}"
+           placeholder="#"
+           (change)="onChangeText($event)"
+           [(ngModel)]="attributeValue">
+
+    <!-- <button type="button" class="btn btn-secondary btn-sm col-md-1">+</button> -->
+
+    <span class="attr-title" [ngClass]="{'col-md-9': checked, 'col-md-11': !checked}">
+        {{_utilService.getAttributeText([possibleAttribute.attribute, 0])}}
+    </span>
+</div>

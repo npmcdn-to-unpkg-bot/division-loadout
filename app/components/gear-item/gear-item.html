@@ -1,0 +1,177 @@
+<div *ngIf="selectedBlueprint != null" class="division-card item-card">
+    <div class="division-card-header"> {{itemSlotType}} </div>
+    <div class="division-card-header row" title="{{selectedBlueprint | json}}">
+
+        <i title="Change blueprint" (click)="resetBlueprint()" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+
+        <item-quality
+                [quality]="selectedBlueprint.quality">
+        </item-quality>
+
+        {{selectedBlueprint.name}}
+
+        <span class="pull-right">
+            <span title="Gearscore" >{{selectedBlueprint.gearscore}}</span>
+            <!-- <i title="Community blueprint rating" class="fa fa-star-o" aria-hidden="true"></i> -->
+        </span>
+    </div>
+    <!--
+    <img class="img-fluid" src="http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7TDlCYzRROE84YWM/materialdesign_introduction.png">
+ -->
+
+        <div class="row" style="text-align: center; ">
+            <native-box
+                    (click)="editingNatives = !editingNatives"
+                    name="Armor"
+                    [value]="getCurrentValue('armor', 'native')">
+            </native-box>
+
+            <native-box
+                    (click)="editingNatives = !editingNatives"
+                    name="Firearms"
+                    [value]="getCurrentValue('firearms', 'native')">
+            </native-box>
+
+            <native-box
+                    (click)="editingNatives = !editingNatives"
+                    name="Stamina"
+                    [value]="getCurrentValue('stamina', 'native')">
+            </native-box>
+
+            <native-box
+                    (click)="editingNatives = !editingNatives"
+                    name="Electronics"
+                    [value]="getCurrentValue('electronics', 'native')">
+            </native-box>
+
+            <native-box (click)="editingNatives = !editingNatives"
+                        name="Slots"
+                        [value]="getCurrentValue('slot', 'native') + getCurrentValue('slot', 'major')">
+            </native-box>
+        </div>
+
+
+    <!--<h7>Native
+        <i *ngIf="!editingNatives" title="Start edit-mode" (click)="editingNatives = true" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+        <i *ngIf="editingNatives" title="Stop edit-mode" (click)="editingNatives = false" class="fa fa-check edit-blueprint-icon" aria-hidden="true"></i>
+    </h7>
+     <ul *ngIf="!editingNatives" style="list-style: none; padding-left: 0;">
+        <li *ngFor="#attr of result.natives; #i = index">
+            <item-attribute
+                    [editing]="editingMinors"
+                    (myevent)="doSomething($event)"
+                    [attributeId]="attr[0]"
+                    [attributeValue]="attr[1]">
+            </item-attribute>
+        </li>
+    </ul> -->
+        <h7 *ngIf="editingNatives">Native</h7>
+        <ul *ngIf="editingNatives" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of getPossibleAttributes('native') ; #i = index">
+                <possible-item-attribute
+                        (onUpdate)="saveResultAttribute(attr, $event)"
+                        [currentValue]="getCurrentValueForAttribute(attr)"
+                        [possibleAttribute]="attr">
+                </possible-item-attribute>
+            </li>
+        </ul>
+
+        <talent-box *ngIf="hasTalent()"
+                (onTalentChanged)="onTalentChanged($event)"
+                [possibleTalents]="getPossibleAttributes('gear_talent')"
+                [(selectedTalent)]="selectedTalent">
+        </talent-box>
+
+        <h7 class="edit-header-container" (click)="editingMajors = !editingMajors">
+
+            <i *ngIf="!editingMajors" title="Start edit-mode" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+            <i *ngIf="editingMajors" title="Stop edit-mode" class="fa fa-check edit-blueprint-icon" aria-hidden="true"></i>
+            Major
+        </h7>
+        <ul *ngIf="!editingMajors" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of result.majors; #i = index">
+                <item-attribute
+                        [editing]="editingMajors"
+                        (myevent)="doSomething($event)"
+                        [attributeId]="attr[0]"
+                        [attributeValue]="attr[1]">
+                </item-attribute>
+            </li>
+        </ul>
+        <ul *ngIf="editingMajors" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of getPossibleAttributes('major'); #i = index">
+                <possible-item-attribute
+                        (onUpdate)="saveResultAttribute(attr, $event)"
+                        [currentValue]="getCurrentValueForAttribute(attr)"
+                        [possibleAttribute]="attr">
+                </possible-item-attribute>
+            </li>
+        </ul>
+
+
+        <!-- Minor Attributes -->
+        <h7 class="edit-header-container" (click)="editingMinors = !editingMinors">
+
+            <i *ngIf="!editingMinors" title="Start edit-mode" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+            <i *ngIf="editingMinors" title="Stop edit-mode" class="fa fa-check edit-blueprint-icon" aria-hidden="true"></i>
+            Minor
+        </h7>
+        <ul *ngIf="!editingMinors" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of result.minors; #i = index">
+                <item-attribute
+                        [editing]="editingMinors"
+                        (myevent)="doSomething($event)"
+                        [attributeId]="attr[0]"
+                        [attributeValue]="attr[1]">
+                </item-attribute>
+            </li>
+        </ul>
+        <ul *ngIf="editingMinors" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of getPossibleAttributes('minor'); #i = index">
+                <possible-item-attribute
+                        (onUpdate)="saveResultAttribute(attr, $event)"
+                        [currentValue]="getCurrentValueForAttribute(attr)"
+                        [possibleAttribute]="attr">
+                </possible-item-attribute>
+            </li>
+        </ul>
+
+        <h7 class="edit-header-container" (click)="editingSkills = !editingSkills">
+
+            <i *ngIf="!editingSkills" title="Start edit-mode" class="fa fa-pencil edit-blueprint-icon" aria-hidden="true"></i>
+            <i *ngIf="editingSkills" title="Stop edit-mode" class="fa fa-check edit-blueprint-icon" aria-hidden="true"></i>
+            Skills
+        </h7>
+        <ul *ngIf="!editingSkills" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of result.skills; #i = index">
+                <item-attribute
+                        [editing]="editingSkills"
+                        (myevent)="doSomething($event)"
+                        [attributeId]="attr[0]"
+                        [attributeValue]="attr[1]">
+                </item-attribute>
+            </li>
+        </ul>
+        <ul *ngIf="editingSkills" style="list-style: none; padding-left: 0;">
+            <li *ngFor="#attr of getPossibleAttributes('skill'); #i = index">
+                <possible-item-attribute
+                        (onUpdate)="saveResultAttribute(attr, $event)"
+                        [currentValue]="getCurrentValueForAttribute(attr)"
+                        [possibleAttribute]="attr">
+                </possible-item-attribute>
+            </li>
+        </ul>
+
+    <ul *ngIf="getCurrentValue('slot', 'native') + getCurrentValue('slot', 'major') > 0" style="list-style: none; padding-left: 0;">
+        <li *ngFor="#ai of getModRange()">
+            <gear-mod blueprintId="gear_mod_204"></gear-mod>
+        </li>
+    </ul>
+
+</div>
+
+<select-blueprint
+        *ngIf="selectedBlueprint == null"
+        (onBlueprintSelected)="onBlueprintSelected($event)"
+        [itemSlotType]="itemSlotType">
+</select-blueprint>

@@ -1,0 +1,82 @@
+<html>
+<head>
+    <base href="/">
+    <title>Division Loadouts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:300,200,700" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="css/app.css" >
+
+    <!-- 1. Load libraries -->
+    <!-- IE required polyfills, in this exact order -->
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+    <!-- <script src="node_modules/angular2/es6/dev/src/testing/shims_for_IE.js"></script> -->
+
+
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+
+    <script src="https://code.angularjs.org/2.0.0-beta.15/angular2-polyfills.js"></script>
+    <script src="https://code.angularjs.org/2.0.0-beta.15/Rx.min.js"></script>
+    <!-- https://github.com/angular/angular/issues/6380 -->
+    <script src="https://code.angularjs.org/2.0.0-beta.15/angular2.dev.js"></script>
+    <script src="https://code.angularjs.org/2.0.0-beta.15/router.min.js"></script>
+
+    <!-- <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script> -->
+    <!-- <script src="node_modules/rxjs/bundles/Rx.js"></script> -->
+    <!-- <script src="node_modules/angular2/bundles/angular2.dev.js"></script> -->
+    <!-- <script src="node_modules/angular2/bundles/router.dev.js"></script> -->
+
+
+
+
+
+
+  <!--  <script src="https://jspm.io/system@0.19.js"></script> -->
+ <!--  <script src="jspm_packages/system.js"></script> -->
+ <!--  <script src="jspm.browser.js"></script> -->
+  <!-- <script src="jspm.config.js"></script> -->
+    <!-- <script src="build.js"></script> -->
+    <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//devalx.piwikpro.com/";
+            _paq.push(['setTrackerUrl', u+'piwik.php']);
+            _paq.push(['setSiteId', 1]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <noscript><p><img src="//devalx.piwikpro.com/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+
+    <!-- 2. Configure SystemJS -->
+    <script>
+        System.config({
+            packages: {
+                app: {
+                    format: 'register',
+                    defaultExtension: 'js'
+                }
+            }
+        });
+      System.import('app/main').then(null, console.error.bind(console));
+    </script>
+</head>
+<body>
+<division-app> Loading... </division-app>
+
+<div class="footer">
+    <!-- Ausblenden wenn screen zu klein. Aufpassen das das nicht nervt. -->
+    Created By ; Donate if u like; Link Github and Reddit thread
+</div>
+</body>
+</html>

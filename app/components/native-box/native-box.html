@@ -1,0 +1,8 @@
+<div *ngIf="!editing" class="native-box">
+    <div>{{name}}</div>
+    <div>{{value == null ? "0" : value}}</div>
+</div>
+<div *ngIf="editing" class="native-box">
+    <div>{{name}}</div>
+    <div>{{value == null ? "0" : value}}</div>
+</div>
