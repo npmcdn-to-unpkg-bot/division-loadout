@@ -1,13 +1,22 @@
 /**
  * Created by Alex on 03.04.2016.
  */
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class Logger {
-    logs:string[] = []; // capture logs for testing
-    log(message: string){
-        this.logs.push(message);
-        console.log(message);
+
+    
+
+    debug(message: string, ...optionalParams:any[]) {
+        console.debug(message, ...optionalParams);
+    }
+
+    log(message: string, ...optionalParams:any[]) {
+        console.log(message, ...optionalParams);
+    }
+
+    warn(message: string, ...optionalParams:any[]) {
+        console.warn(message, ...optionalParams);
     }
 }

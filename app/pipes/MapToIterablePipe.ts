@@ -1,7 +1,7 @@
 /**
  * Created by Alex on 17.04.2016.
  */
-import {Pipe, PipeTransform} from "angular2/core";
+import {Pipe, PipeTransform} from "@angular/core";
 @Pipe({
     name: 'mapToIterable'
 })

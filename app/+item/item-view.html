@@ -1,0 +1,85 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 weapons-container">
+            <!-- Weapon container -->
+            <div class="row division-card-category">
+                <div class="col-md-12">
+                    <i (click)="showWeapons = !showWeapons" class="fa fa-caret-down fa-border division-category-icon hidden-sm-up" aria-hidden="true"></i>
+                    <i (click)="addWeaponCard()" class="fa fa-plus fa-border division-category-icon" aria-hidden="true"></i>
+                    <i (click)="toggleSearchWeapons()" class="fa fa-search division-category-icon" aria-hidden="true"></i>
+
+                    <input type="text"
+                           *ngIf="searchWeapons"
+                           class="filter-blueprint-input"
+                           [(ngModel)]="filterWeapons"
+                           placeholder="search weapons ..." />
+
+                    <h2 (click)="searchWeapons = !searchWeapons" *ngIf="!searchWeapons" class="division-category-text"> Weapons </h2>
+                 </div>
+            </div>
+
+            <weapon-item
+                    *ngIf="showWeapons"
+                    *ngFor="#item of rangeWeaponCards(); #i = index"
+                    slotId="{{i}}"
+                    itemSlotType="primary"
+                    [filter]="filterWeapons">
+            </weapon-item>
+
+        </div>
+        <div class="col-md-6 gear-container">
+            <!-- gear container -->
+            <div class="row division-card-category">
+                <div class="col-md-12">
+                    <i (click)="showGear = !showGear" class="fa fa-caret-down fa-border division-category-icon hidden-sm-up" aria-hidden="true"></i>
+                    <i (click)="toggleSearchGear()" class="fa fa-search division-category-icon" aria-hidden="true"></i>
+
+                    <input type="text"
+                           *ngIf="searchGear"
+                           class="filter-blueprint-input"
+                           [(ngModel)]="filterGear"
+                           placeholder="search gear ..." />
+                    <h2 (click)="searchGear = !searchGear" *ngIf="!searchGear" class="division-category-text"> Equipped Gear </h2>
+                </div>
+            </div>
+
+
+            <div *ngIf="showGear" class="col-md-6">
+
+                <gear-item slotId="4" itemSlotType="body" [filter]="filterGear"></gear-item>
+                <gear-item slotId="5" itemSlotType="mask" [filter]="filterGear"></gear-item>
+                <gear-item slotId="6" itemSlotType="kneepads"[filter]="filterGear"></gear-item>
+
+            </div>
+            <div *ngIf="showGear" class="col-md-6">
+
+                <gear-item slotId="7" itemSlotType="backpack" [filter]="filterGear"></gear-item>
+                <gear-item slotId="8" itemSlotType="gloves" [filter]="filterGear"></gear-item>
+                <gear-item slotId="9" itemSlotType="holster" [filter]="filterGear"></gear-item>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row division-card-category">
+                <div class="col-md-12">
+                    <i (click)="showSummary = !showSummary" class="fa fa-caret-down fa-border division-category-icon hidden-sm-up" aria-hidden="true"></i>
+                    <i (click)="toggleSearchSummary()" class="fa fa-search division-category-icon" aria-hidden="true"></i>
+
+                    <input type="text"
+                           *ngIf="searchSummary"
+                           class="filter-blueprint-input"
+                           [(ngModel)]="filterSummary"
+                           placeholder="search summary stats ..." />
+
+                    <h2 (click)="searchSummary = !searchSummary" *ngIf="!searchSummary" class="division-category-text"> Summary </h2>
+                </div>
+            </div>
+            <summary
+                    *ngIf="showSummary"
+                    [filter]="filterSummary">
+            </summary>
+        </div>
+
+    </div>
+</div>

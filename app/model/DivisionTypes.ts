@@ -2,14 +2,16 @@
  * Created by Alex on 17.04.2016.
  */
 export type AttributeId = "armor" | "chc" | "chd" | "health" | "scavaging" | "stability"
-    |"accuracy" |"skill_power"|"health_kill"|"firearms"|"stamina"|"electronics"|"slot+"|"slot++"|"kill_xp"|"ammo_cap"|"slot"
+    |"accuracy" |"skill_power"|"health_kill"|"firearms"|"stamina"|"electronics"|"slot+"|"slot++"|"kill_xp"|"ammo_cap"|"gear_mod_slot_1"
+    |"gear_mod_slot_2"|"gear_mod_slot_3"
+    
     // Resistances
     |"disorient_res"|"blind_res"|"burn_res"|"bleed_res"|"exotic_res"|"elite_prot"|"disrupt_res"
     // Extra Damage
     |"weapon_dmg"|"armor_dmg"|"elite_dmg"|"headshot_dmg"|"backpack_cap"|
 
     "armor_plus"|"backpack_cap"|"skill_haste"|"signature_gain"|"seeker_damage"|"station_duration"|"turret_damage"|"shock_res"|
-
+    "elite_prot"|
  "smg_damage"|
  "assault_damage"|
  "shotgun_damage"|
@@ -32,7 +34,11 @@ export type AttributeId = "armor" | "chc" | "chd" | "health" | "scavaging" | "st
 "weapon_optimal_range"|
 "weapon_reload_speed"|
 
-
+    // sets
+    "sentry"|
+    "nomad"|
+    "striker"|
+    "tactician"|
 
 "technical" |
 "inventive" |
@@ -70,6 +76,10 @@ export type AttributeId = "armor" | "chc" | "chd" | "health" | "scavaging" | "st
 "stalker" |
 "tactician" |
 
+"shooter_talent"|
+"nomad_talent"|
+"tactician_talent"|
+"stalker_talent"|
 
 
 "stalker"|
@@ -79,6 +89,7 @@ export type AttributeId = "armor" | "chc" | "chd" | "health" | "scavaging" | "st
     
     
     // skills
+    "mobile_cover_dmg_res"|
     "smartcover_dmg_inc"|
 "shield_damage"|
 "mobile_cover_health"|
@@ -103,10 +114,14 @@ export type AttributeDataType = "percent" | "meter" | "seconds" | "number";
 
 export type ItemQuality = "set" | "highend" | "purple" | "blue" | "green" | "grey";
 
-export type AttributeType = "native" | "major" | "minor" | "skill" | "weapon_talent" | "gear_talent";
+export type AttributeType = "native" | "primary" | "major" | "minor" | "skill" | "weapon_talent" | "gear_talent" | "set";
 
 export type ItemSlotType = "primary" | "secondary" | "body" | "mask" | "kneepads" | "backpack" | "gloves" | "holster" | 
-    "gear_mod" | "weapon_slot_magazine" ; // TODO weapon_mod aufpliutten in einzelne typen
+    "gear_mod" | 
+    "weapon_slot_magazine" | 
+    "weapon_slot_barrel_short" | "weapon_slot_barrel_long" | 
+    "weapon_slot_muzzle_small" | "weapon_slot_muzzle_large" |
+    "weapon_slot_optic_short" | "weapon_slot_optic_long"; 
 
 export type ItemSet = "striker" | "sentry" | "tactician" | "nomad" | "none";
 
@@ -130,7 +145,9 @@ export class AttributeConsts {
     public static FIREARMS: AttributeId = "firearms";
     public static STAMINA: AttributeId = "stamina";
     public static ELECTRONICS: AttributeId = "electronics";
-    public static GEAR_MOD: AttributeId = "slot";
+    public static GEAR_MOD_1: AttributeId = "gear_mod_slot_1";
+    public static GEAR_MOD_2: AttributeId = "gear_mod_slot_2";
+    public static GEAR_MOD_3: AttributeId = "gear_mod_slot_3";
     public static KILL_XP: AttributeId = "kill_xp";
     public static AMMO_CAP: AttributeId = "ammo_cap";
     public static ARMOR_PLUS: AttributeId = "armor_plus";
@@ -139,6 +156,8 @@ export class AttributeConsts {
     public static SIGNATURE_GAIN: AttributeId = "signature_gain";
     public static SHOCK_RES: AttributeId = "shock_res";
     
+
+
     public static SMG_DAMAGE: AttributeId = "smg_damage";
     public static ASSAULT_DAMAGE: AttributeId = "assault_damage";
     public static SHOTGUN_DAMAGE: AttributeId = "shotgun_damage";

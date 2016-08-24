@@ -5,10 +5,10 @@ h1, h2, h3, h7 {
 
 body {
     background-color: #222;
-    background-image: url('../images/background-division-blur-1.jpg');
+    /*background-image: url('../images/background-division-blur-1.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: center;
+    background-position: center; */
 
     font-family: 'Titillium Web', sans-serif;
 
@@ -34,27 +34,77 @@ body {
 
 .attr-value {
     color: #eb7c09;
+
+    padding-right: 4px;
 }
 
+.blue-borders {
+    border-top: 2px solid #4084c5 !important;
+}
+
+.green-borders {
+    border-top: 2px solid #6ec449 !important;
+}
+
+.orange-borders {
+    border-top: 2px solid orange !important;
+}
 
 .division-card {
+    border-top: 2px solid #4084c5;
+    border-bottom: 2px solid #444;
 
-    padding: 5px 20px;
+    border-left: 2px solid #444;
+    border-right: 2px solid #444;
     margin: 20px 0;
-    background-color: rgba(0,0,0,0.7);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 1);
+    background-color: #333;
+
     /*transform: perspective(2500px) rotateY(-15deg);*/
 }
 
+.division-nav {
+    background-color: #333;
+    border-bottom: 2px solid #444;
+    color: white;
+}
+
+.division-nav li {
+
+}
+
+.division-nav a {
+    color: grey;
+}
+
+.division-nav a:hover {
+    color: darkorange;
+}
 
 .division-card-category {
+    height: 43px;
     color: white;
     background-color: rgba(0,0,0,0.7);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 1);
+
 }
 .division-card-header {
     color:white;
+    padding: 10px;
+    background-color: #282828;
+}
 
+.division-card-content {
+    padding: 0;
+    color: white;
+    padding-top: 0px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.summary-container h4 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .division-card h5 {
@@ -64,23 +114,32 @@ body {
 .division-card ul {
     list-style: none;
     padding-left: 0;
+    margin: 0 0px;
 }
 
 .division-card ul li {
+    padding-left: 3px;
     color:white;
 }
 
+.division-card ul li:hover {
+
+    color:black;
+    background-color: white;
+}
+
 .filter-blueprint-input {
-    background-color: rgba(0,0,0,0);
-    border: 0px solid grey;
-    color: grey;
-    padding: 2px 5px;
+    background: #2c2c2c;
+    border: 2px solid orange;
+
+    padding: 2px 10px;
 }
 
 .filter-blueprint-input:hover {
-    background-color: rgba(0,0,0,0.5);
-    border: 0px solid white;
-    color: white;
+    background: #2c2c2c;
+    border: 2px solid orange;
+
+    padding: 2px 10px;
 }
 
 .filter-blueprint-search-icon {
@@ -128,16 +187,19 @@ body {
 }
 
 .input-item-attribute {
-    border: 1px dashed white;
+    border: 0px dashed white;
     padding: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgb(31, 31, 31);
     color: orange;
     text-align: center;
+    width: 100%; /* Fixes FF bugging around at input width */
 }
 
-.checkbox-item-attribute {
-
-    transform: translateY(50%);
+.possible-range-item-attribute {
+    padding: 0;
+    color: rgba(255, 165, 0, 0.5);
+    text-align: center;
+    width: 100%; /* Fixes FF bugging around at input width */
 }
 
 nav {
@@ -146,7 +208,28 @@ nav {
 
 a.router-link-active {
     font-weight: 300;
+    color: darkorange;
+}
+
+.router-link-active a {
+    font-weight: 300;
     color: white;
+}
+
+.md-sidenav-side {
+    width: 250px;
+
+}
+
+md-sidenav-layout {
+    /* TODO fix this (remove)*/
+    min-height: 600px;
+}
+
+.example-fill-remaining-space {
+/* This fills the remaining space, by using flexbox.
+ Every toolbar row uses a flexbox row layout. */
+flex: 1 1 auto;
 }
 
 .edit-blueprint-icon {
@@ -164,10 +247,115 @@ a.router-link-active {
 }
 
 .gear-mod-container {
-    background: rgba(255,255,255,0.15);
-    margin-bottom: 5px;
+
 }
 
 .edit-header-container {
+    font-style: italic;
+    font-weight: bold;
+}
+
+.division-category-icon {
+    width: 35px;
+    text-align: center;
+    border-color: grey;
+    font-size: 1.5rem;
+    color: grey;
+}
+
+.division-category-icon:hover {
+    border-color: white;
+    color: white;
     cursor: pointer;
+}
+
+.division-category-text {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.blueprint-header-icon {
+    color: rgba(255,255,255, 0.8);
+    border-radius: 2px;
+    padding: 4px;
+    font-size: 1.4rem;
+}
+
+
+.blueprint-header-icon:hover {
+    color: black;
+    background-color: white;
+    padding: 4px;
+    cursor: pointer;
+
+}
+
+.ellipse {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.blueprint-bottom-btn {
+    color: rgba(255,255,255, 0.8);
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.blueprint-bottom-btn:hover {
+    color: black;
+    background-color: white;
+    cursor: pointer;
+}
+
+.white-background {
+    color: black;
+    background-color: white;
+}
+
+
+.gear-icon {
+    width: 64px;
+    height: 64px;
+    background-image: url('../images/gear-icons.png');
+    display: block;
+}
+
+.gear-icon-primary {
+    background-position: 0 0;
+}
+
+.gear-icon-secondary {
+    background-position: 0 0;
+}
+
+.gear-icon-body {
+    background-position: 0 -64px;
+}
+
+.gear-icon-mask {
+    background-position: 0 -128px;
+}
+
+.gear-icon-kneepads {
+    background-position: 0 -192px;
+}
+
+.gear-icon-backpack {
+    background-position: 0 -256px;
+}
+
+.gear-icon-gloves {
+    background-position: 0 -320px;
+}
+
+.gear-icon-holster {
+    background-position: 0 -384px;
 }

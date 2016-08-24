@@ -1,21 +1,21 @@
 /**
  * Created by Alex on 17.04.2016.
  */
-import {Pipe, PipeTransform} from 'angular2/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {AttributeDescriptor} from "../model/AttributeDescriptor";
+
 /*
- * Raise the value exponentially
- * Takes an exponent argument that defaults to 1.
- * Usage:
- *   value | exponentialStrength:exponent
- * Example:
- *   {{ 2 |  exponentialStrength:10}}
- *   formats to: 1024
+ * Filters the incoming stream on the attributeType.
+ * 
  */
-@Pipe({name: 'attrType'})
+@Pipe({name: 'attributeType'})
 export class AttributeTypePipe implements PipeTransform {
-    transform(value:number, [attributeType]) : number {
+    transform(attributes:AttributeDescriptor[], attributeType:string) : AttributeDescriptor[] {
+        if(attributes == null){
+            return [];
+        }
+
         // attributeType -> native, major, minor ...
-        
-        return 5;
+        return attributes.filter(attribute => attribute.attributeType === attributeType);
     }
 }

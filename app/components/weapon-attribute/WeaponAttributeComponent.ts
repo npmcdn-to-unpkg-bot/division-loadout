@@ -1,7 +1,7 @@
 /**
  * Created by Alex on 09.04.2016.
  */
-import {Component, Input, AfterViewInit, OnInit} from 'angular2/core';
+import {Component, Input, AfterViewInit, OnInit} from '@angular/core';
 
 import {DivisionService} from "../../service/division.service";
 import {UtilityService} from "../../service/utility.service";

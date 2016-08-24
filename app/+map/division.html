@@ -1,0 +1,12 @@
+<div class="container-fluid">
+    <div class="row">
+        Division MAP
+
+        ITEM LOOP FIREBASE
+        <div *ngFor="let item of items | async" style="color: white;">
+
+            {{ item | json }}
+        </div>
+
+    </div>
+</div>

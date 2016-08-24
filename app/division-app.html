@@ -1,30 +1,100 @@
-<!--<nav class="navbar navbar-dark">
-    <a class="navbar-brand" href="#">{{title}}</a>
-    <ul class="nav navbar-nav">
-        <li class="nav-item active">
-            <a class="nav-link" [routerLink]="['DivisionLoadout']">Loadout</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['DivisionMap']">Featured Items</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['DivisionMap']">Map</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['DivisionVendors']">Vendors</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['DivisionBlueprints']">Blueprints</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['DivisionAbout']">About</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['DivisionAbout']">Appearance</a>
-        </li>
-    </ul>
-    <form class="form-inline pull-xs-right">
-        <input class="form-control filter-blueprint-input" type="text" placeholder="Search">
-    </form>
-</nav>-->
-<router-outlet></router-outlet>
+<!-- <header mdl class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">Home</span>
+        <div class="mdl-layout-spacer"></div>
+
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            <i class="material-icons">add</i>
+        </button>
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+            <i class="material-icons">more_vert</i>
+        </button>
+        <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+            <li class="mdl-menu__item">Static entry</li>
+
+
+        </ul>
+    </div>
+</header> -->
+
+<md-toolbar color="primary" style="background-color: #333; border-bottom: 2px solid #444;">
+    <button md-icon-button (click)="sidenav.toggle()">
+        <md-icon >menu</md-icon>
+    </button>
+
+    <span style="font-family: 'Montserrat',sans-serif; color: darkorange; font-size: 1.3rem;">
+        Division Loadout
+    </span>
+
+    <!-- This fills the remaining space of the current row -->
+    <span class="example-fill-remaining-space"></span>
+
+    <span>Right</span>
+
+</md-toolbar>
+
+<ngrx-devtools toggle-command="ctrl-k" position-command="ctrl-e"></ngrx-devtools>
+
+<md-sidenav-layout>
+    <md-sidenav #sidenav mode="side" [opened]="true">
+
+        <md-divider></md-divider>
+        <h6 md-subheader style="color:grey;">NEW</h6>
+        <md-nav-list>
+
+            <!--
+            Displays an list of cards for all items that are availible on the users client side. (draggable too)
+            The user should be able to initiate the editing here per item.
+            the new loadout-page just uses a "link" for the items.
+
+            -->
+            <a md-list-item [routerLink]="['/loadout']">Loadout</a>
+
+        </md-nav-list>
+
+        <md-divider></md-divider>
+        <h6 md-subheader style="color:grey;">Loadouts</h6>
+        <h7 md-subheader style="color:grey;">Remote(Like starred?)</h7>
+        <br>
+        <h7 md-subheader style="color:grey;">Local </h7>
+        <br>
+        <h7 md-subheader style="color:grey;">Legacy</h7>
+
+        <md-nav-list>
+
+            <a md-list-item [routerLink]="['/loadout_old']">Loadout Old</a>
+
+            <a md-list-item [routerLink]="['/stash_old']">Stash Old</a>
+
+            <a md-list-item [routerLink]="['/loadouts_shared']">Shared Loadouts</a>
+
+            <a md-list-item [routerLink]="['/blueprints']">Blueprints</a>
+
+            <a md-list-item [routerLink]="['/about']">About</a>
+
+        </md-nav-list>
+
+        <md-divider></md-divider>
+        <h7 md-subheader style="color:grey;">Explore</h7>
+        <md-nav-list>
+            <md-list-item>
+                <a md-line [routerLink]="['/explore']">Sets</a>
+            </md-list-item>
+        </md-nav-list>
+        <h7 md-subheader style="color:grey;">Actions</h7>
+        <md-nav-list>
+            <md-list-item>
+                <a md-line (click)="share()">Share Loadout!</a>
+            </md-list-item>
+        </md-nav-list>
+
+
+    </md-sidenav>
+    <md-sidenav #end align="end">
+        End Sidenav.
+        <button md-button (click)="end.close()">Close</button>
+    </md-sidenav>
+
+    <router-outlet></router-outlet>
+
+</md-sidenav-layout>

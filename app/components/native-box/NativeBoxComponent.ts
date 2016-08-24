@@ -1,12 +1,9 @@
 /**
  * Created by Alex on 09.04.2016.
  */
-import {Component, Input, OnInit, HostListener, Output, EventEmitter} from 'angular2/core';
-import {Blueprint} from '../../model/blueprint';
-import {DivisionItem} from '../../model/DivisionItem';
+import {Component, Input, OnInit, HostListener, Output, EventEmitter} from '@angular/core';
 
 import {DivisionService} from "../../service/division.service";
-import {SharedService} from "../../service/shared.service";
 import {UtilityService} from "../../service/utility.service";
 import {Logger} from "../../service/logger.service";
 
@@ -20,15 +17,12 @@ export class NativeBoxComponent {
                 private _utilService: UtilityService,
                 private _logger: Logger) { }
 
-    @Input() value: string;
+    @Input() value: number;
     @Input() name: string;
-    editing: boolean;
 
-    @Output() onUpdate = new EventEmitter();
     
     @HostListener('click', ['$event.target'])
     onClick(btn) {
-        this.editing = !this.editing;
         
         //alert(this.checked);
         //alert("Click: " + this.attributeId + " -> " + this.attributeValue)

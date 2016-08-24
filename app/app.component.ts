@@ -1,35 +1,97 @@
-import { Component, Directive, HostBinding, Input } from "angular2/core";
-import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from 'angular2/router';
+import { Component, Directive, HostBinding, Input } from "@angular/core";
+import { HTTP_PROVIDERS } from "@angular/http";
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
+//import {Devtools, devtoolsConfig } from '@ngrx/devtools'
 
-import {DivisionPlannerView} from "./views/planner/DivisionPlannerView";
-import {DivisionVendorsView} from "./views/vendors/DivisionVendorsView";
-import {DivisionMapView} from "./views/map/DivisionMapView";
+import {DivisionVendorsView} from "./+vendors/DivisionVendorsView";
+import {DivisionMapView} from "./+map/DivisionMapView";
+import {DivisionBlueprintView} from "./+blueprints/DivisionBlueprintView";
+import {DivisionAboutView} from "./+about/DivisionAboutView";
+import {DivisionLoadoutView} from "./+loadout/DivisionLoadoutView";
+import {DivisionItemView} from "./+item/DivisionItemView";
+import {DivisionSharedLoadoutsView} from "./+loadouts-shared/DivisionSharedLoadoutsView";
+import {DivisionExploreView} from "./+explore/DivisionExploreView";
 
 import {GearItemComponent} from "./components/gear-item/GearItemComponent";
-import {SummaryComponent} from "./components/summary/summary";
+import {SummaryComponent} from "./components/summary/SummaryComponent";
 
-import {SharedService} from "./service/shared.service";
 import {UtilityService} from "./service/utility.service";
 import {DivisionService} from "./service/division.service";
 
 import {Logger} from "./service/logger.service";
-import {DivisionBlueprintView} from "./views/blueprints/DivisionBlueprintView";
-import {DivisionAboutView} from "./views/about/DivisionAboutView";
+
+import {LoadoutService, LoadoutState} from "./service/LoadoutService";
+
+import {FirebaseService} from "./service/FirebaseService";
+import {NAVBAR_DIRECTIVES} from "./shared/navbar/Navbar";
+import {PageNotFoundComponent} from "./util/PageNotFoundComponent";
+import {DivisionStashView} from "./+stash/DivisionStashView";
+
+import { MD_SIDENAV_DIRECTIVES } from '@angular2-material/sidenav';
+import { MdToolbar } from '@angular2-material/toolbar';
+import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
+import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
+import { MdButton } from '@angular2-material/button';
+import {DivisionOldLoadoutView} from "./+loadout_old/DivisionOldLoadoutView";
+import {ReduxService} from "./service/ReduxService";
+//import { MD_GRID_LIST_DIRECTIVES } from '@angular2-material/grid-list';
 
 @Component({
     selector: "division-app",
-    directives: [GearItemComponent, SummaryComponent, ROUTER_DIRECTIVES],
-    providers: [DivisionPlannerView, DivisionBlueprintView, DivisionVendorsView, DivisionMapView, 
-        DivisionService, SharedService, Logger, UtilityService, ROUTER_PROVIDERS],
+    directives: [
+        // Angular-Material
+        MD_SIDENAV_DIRECTIVES,
+        //MD_GRID_LIST_DIRECTIVES,
+        MD_LIST_DIRECTIVES,
+        MdToolbar, MdIcon, MdButton, 
+        
+        // Other
+        GearItemComponent, SummaryComponent, ROUTER_DIRECTIVES, 
+       // Devtools, 
+        NAVBAR_DIRECTIVES
+    ],
+    providers: [MdIconRegistry,
+        
+        DivisionLoadoutView, DivisionBlueprintView, DivisionVendorsView, DivisionMapView,
+        LoadoutService, DivisionService, Logger, UtilityService, FirebaseService,
+        ReduxService
+        
+        //devtoolsConfig({
+        //    position: 'bottom',
+        //    visible: false,
+        //    size: 0.3
+        //})
+    ],
     templateUrl: "app/division-app.html"
 })
-@RouteConfig([
-    { path: '/loadout',     name: 'DivisionLoadout',        component: DivisionPlannerView,     useAsDefault: true },
-    { path: '/vendors',     name: 'DivisionVendors',        component: DivisionVendorsView }, 
-    { path: '/map',         name: 'DivisionMap',            component: DivisionMapView },
-    { path: '/blueprints',  name: 'DivisionBlueprints',     component: DivisionBlueprintView },
-    { path: '/about',       name: 'DivisionAbout',          component: DivisionAboutView }
-])
+/* @Routes([
+    { path: '/loadout',         component: DivisionLoadoutView          },
+    { path: '/loadout_old',         component: DivisionOldLoadoutView          },
+    //{ path: '/stash_old',       component: DivisionOldStashView            },
+    { path: '/stash',           component: DivisionStashView         },
+    { path: '/loadouts_shared', component: DivisionSharedLoadoutsView   },
+    { path: '/vendors',         component: DivisionVendorsView          },
+    { path: '/item',            component: DivisionItemView             }, 
+    { path: '/map',             component: DivisionMapView              },
+    { path: '/blueprints',      component: DivisionBlueprintView        },
+    { path: '/about',           component: DivisionAboutView            },
+    { path: '/explore',         component: DivisionExploreView          },
+    { path: '/explore/*',       component: DivisionExploreView          },
+    { path: '/*',               component: PageNotFoundComponent        },
+    { path: '',                 component: PageNotFoundComponent        }
+])*/
 export class AppComponent {
-   title = "Division Loadouts";
+    constructor(private firebaseService: FirebaseService, private loadoutService:LoadoutService) {
+
+    }
+
+    share(){
+        this.firebaseService.share();
+    }
+
+    localSave(){
+        this.loadoutService.localSave();
+    }
+
+    title = "Division Loadout";
 }

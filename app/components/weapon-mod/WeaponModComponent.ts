@@ -1,44 +1,79 @@
 /**
  * Created by Alex on 03.04.2016.
  */
-import {Component, Input, OnInit} from 'angular2/core';
-import {Router, RouteParams} from 'angular2/router';
-import {Blueprint} from '../../model/blueprint';
-import {DivisionItem} from '../../model/DivisionItem';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {ItemAttribute} from "../item-attribute/item.attribute";
-import {DivisionAttribute} from "../../model/division.attribute";
 import {PossibleItemAttribute} from "../possible-item-attribute/possible.item.attribute";
-import {PossibleDivisionAttribute} from "../../model/PossibleDivisionAttribute";
-
+import {AttributeDescriptor} from "../../model/AttributeDescriptor";
 import {DivisionService} from "../../service/division.service";
-import {SharedService} from "../../service/shared.service";
-import {UtilityService} from "../../service/utility.service";
-import {Logger} from "../../service/logger.service";
 import {AttributeType, ItemSlotType, AttributeConsts, AttributeId} from "../../model/DivisionTypes";
-import {NativeBoxComponent} from "../native-box/NativeBoxComponent";
-import {ItemQualityComponent} from "../item-quality/ItemQualityComponent";
-import {SelectBlueprint} from "../select-blueprint/SelectBlueprint";
-import {TalentBoxComponent} from "../talent-box/TalentBoxComponent";
+import {AttributesSelectorComponent} from "../attributes-selector/AttributesSelectorComponent";
+import {AttributeTypePipe} from "../../pipes/AttributeTypePipe";
+import {Blueprint} from "../../model/blueprint";
+import {htmlTemplate} from "./weapon-mod.html";
 
 @Component({
     selector: 'weapon-mod',
-    directives:[PossibleItemAttribute, ItemAttribute],
-    templateUrl: 'app/components/weapon-mod/weapon-mod.html'
+    directives:[AttributesSelectorComponent, PossibleItemAttribute, ItemAttribute],
+    pipes: [AttributeTypePipe],
+    template: htmlTemplate
 })
 export class WeaponModComponent {
-    constructor(private _divisionService: DivisionService,
-                private _logger: Logger,
-                private _sharedService: SharedService,
-                private _utilService: UtilityService) { }
+    constructor(private _divisionService: DivisionService) { }
 
-    @Input() possibleWeaponmodTypes: { name: string, slotTypes: AttributeId[] };
-
-    // INPUT: ModType? (Example: OPTIC)
-    // INPUT: All possibilties for a given type. (Example: [WEAPON_SLOT_OPTIC_SHORT, WEAPON_SLOT_OPTIC_LONG])
+    @Input() modId: string;
+    @Input() editing: boolean;
+    @Input() mod: { modId: string, blueprint:Blueprint, attributes: AttributeDescriptor[] };
     
-    editing: boolean;
+    // TODO not used currently
+    // INPUT: All possibilties for a given type. (Example: [WEAPON_SLOT_OPTIC_SHORT, WEAPON_SLOT_OPTIC_LONG])
+    @Input() modTypes: AttributeId[];
+    
+    @Output() modRemoved = new EventEmitter();
+    @Output() modInserted = new EventEmitter();
+    @Output() modAttributeChanged = new EventEmitter();
+    @Output() modAttributeRemoved = new EventEmitter();
 
-    getPossibleAttributes(): PossibleDivisionAttribute[] {
-        return this._divisionService.getBlueprintsBySlot('').possibleAttributes.filter(possAttr => possAttr.attributeType == attributeType);
+
+
+    debugBpSelect(){
+
+        let bpId = null;
+
+        switch(this.modId){
+            case "MAGAZIN":
+                bpId = "weapon_mod_magazine_204";
+                break;
+            case "MUZZLE":
+                bpId = "weapon_mod_muzzle_204";
+                break;
+            case "OPTIC":
+                bpId = "weapon_mod_optic_204";
+                break;
+            case "BARREL":
+                bpId = "weapon_mod_barrel_204";
+                break;
+            default:
+                bpId = "weapon_mod_204";
+        }
+
+        // TODO dont hardcode this. instead make the user select a specific mod ...
+        let bp = this._divisionService.getBlueprintById(bpId);
+        this.modInserted.emit({ modId: this.modId, blueprint: bp});
+    }
+
+    removeMod(){
+        this.modRemoved.emit({ modId: this.modId });
+    }
+
+    onAttributeChanged(event: AttributeDescriptor) {
+        console.log("NodCmpt.onAttributeChanged");
+        // TODO why the fuck is this method called, but no redux action is emitted, but in contrary the removeMod() method is?!?!?!?!?!?1
+        // im JS code sieht man das hier keine Observer eingetragen sind für "action". Bei removeMod hingegen schon. WTF. Bug?
+        this.modAttributeChanged.emit({ modId: this.modId, attribute: event });
+    }
+
+    onAttributeRemoved(event: AttributeDescriptor) {
+        this.modAttributeRemoved.emit({ modId: this.modId, attribute: event });
     }
 }

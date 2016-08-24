@@ -1,92 +1,61 @@
 /**
  * Created by Alex on 03.04.2016.
  */
-import {Component, Input, OnInit} from 'angular2/core';
-import {Router, RouteParams} from 'angular2/router';
-import {Blueprint} from '../../model/blueprint';
-import {DivisionItem} from '../../model/DivisionItem';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {ItemAttribute} from "../item-attribute/item.attribute";
-import {DivisionAttribute} from "../../model/division.attribute";
 import {PossibleItemAttribute} from "../possible-item-attribute/possible.item.attribute";
-import {PossibleDivisionAttribute} from "../../model/PossibleDivisionAttribute";
+import {AttributeDescriptor} from "../../model/AttributeDescriptor";
 
 import {DivisionService} from "../../service/division.service";
-import {SharedService} from "../../service/shared.service";
-import {UtilityService} from "../../service/utility.service";
-import {Logger} from "../../service/logger.service";
-import {AttributeType, ItemSlotType, AttributeConsts} from "../../model/DivisionTypes";
-import {NativeBoxComponent} from "../native-box/NativeBoxComponent";
-import {ItemQualityComponent} from "../item-quality/ItemQualityComponent";
-import {SelectBlueprint} from "../select-blueprint/SelectBlueprint";
-import {TalentBoxComponent} from "../talent-box/TalentBoxComponent";
+import {AttributesSelectorComponent} from "../attributes-selector/AttributesSelectorComponent";
+import {htmlTemplate} from "./gear-mod.html";
+import {AttributeId} from "../../model/DivisionTypes";
+import {Blueprint} from "../../model/blueprint";
+import {AttributeTypePipe} from "../../pipes/AttributeTypePipe";
 
 @Component({
     selector: 'gear-mod',
-    directives:[PossibleItemAttribute, ItemAttribute],
-    templateUrl: 'app/components/gear-mod/gear-mod.html'
+    directives:[AttributesSelectorComponent, PossibleItemAttribute, ItemAttribute],
+    providers: [],
+    pipes: [AttributeTypePipe],
+    template: htmlTemplate
 })
 export class GearModComponent implements OnInit {
-    constructor(private _divisionService: DivisionService,
-                private _logger: Logger,
-                private _sharedService: SharedService,
-                private _utilService: UtilityService) { }
-   
-    
-    @Input() blueprintId: string;
-    
-    blueprint: Blueprint;
-    editing: boolean;
+    constructor(private _divisionService: DivisionService) { }
 
-    result: DivisionItem = {       
-        "mods": [
-
-        ]
-    }
+    @Input() modId: string;
+    @Input() editing: boolean;
+    @Input() mod: { modId: string, blueprint:Blueprint, attributes: AttributeDescriptor[] };
     
+    @Output() modRemoved = new EventEmitter();
+    @Output() modInserted = new EventEmitter();
+    @Output() modAttributeChanged = new EventEmitter();
+    @Output() modAttributeRemoved = new EventEmitter();
+       
     ngOnInit() {
-        this.blueprint = this._divisionService.getBlueprintById(this.blueprintId);
-
-        this._logger.log(JSON.stringify(this.blueprint));
+        // blueprintId:"gear_mod_204"
+        //this.blueprintCompanion.BlueprintId = this.blueprintId;
     }
 
-    getPossibleAttributes(attributeType: string): PossibleDivisionAttribute[] {
-        let result = this.blueprint.possibleAttributes.filter(possAttr => possAttr.attributeType == attributeType);
-        this._logger.log("testsetest");
-        this._logger.log(JSON.stringify(result));
-        return result;
+    debugBpSelect(){
+        // TODO dont hardcode this. instead make the user select a specific mod ...
+        let bp = this._divisionService.getBlueprintById("gear_mod_204");
+        
+        this.modInserted.emit({ modId: this.modId, blueprint: bp});
     }
 
-    getCurrentValueForAttribute(attribute:PossibleDivisionAttribute): number {
-        let value = this.result.mods.find(attr => attr[0] == attribute.attribute);
-        return value == null ? null : value[1];
+    removeMod(){
+        this.modRemoved.emit({ modId: this.modId });    
     }
 
-    saveResultAttribute(attribute: PossibleDivisionAttribute, event: [number, boolean]){
-        let attributeValue:number = event[0];
-        let checked:boolean = event[1];
+    onAttributeChanged(event: AttributeDescriptor) {
+        console.log("NodCmpt.onAttributeChanged");
+        // TODO why the fuck is this method called, but no redux action is emitted, but in contrary the removeMod() method is?!?!?!?!?!?1
+        // im JS code sieht man das hier keine Observer eingetragen sind für "action". Bei removeMod hingegen schon. WTF. Bug?
+        this.modAttributeChanged.emit({ modId: this.modId, attribute: event });        
+    }
 
-        let blub = this.result.mods.find(attr => attr[0] == attribute.attribute);
-
-        if(checked){
-            // If checked -> Add
-            if(blub == null){
-                // attribute ist noch nicht vorhanden, also pushen
-                this.result.mods.push([attribute.attribute, attributeValue]);
-            } else {
-                // attribut ist vorhanden, also nur value aendern
-                blub[1] = attributeValue;
-            }
-
-        } else {
-            if(blub == null){
-                // attribute ist noch nicht vorhanden, also kann es auch nicht geloescht werden
-                // sollte nicht vorkommen.
-            } else {
-                // attribut ist vorhanden, also loeschen
-                let idx = this.result.mods.indexOf(blub);
-                this.result.mods.splice(idx, 1);
-            }
-        }
-
+    onAttributeRemoved(event: AttributeDescriptor) {
+        this.modAttributeRemoved.emit({ modId: this.modId, attribute: event });        
     }
 }

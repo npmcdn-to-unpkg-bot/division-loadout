@@ -1,251 +1,164 @@
 /**
  * Created by Alex on 03.04.2016.
  */
-import {Component, Input, OnInit} from 'angular2/core';
-import {Router, RouteParams} from 'angular2/router';
+import {Component, Input, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 import {Blueprint} from '../../model/blueprint';
-import {DivisionItem} from '../../model/DivisionItem';
-import {ItemAttribute} from "../item-attribute/item.attribute";
-import {DivisionAttribute} from "../../model/division.attribute";
-import {PossibleItemAttribute} from "../possible-item-attribute/possible.item.attribute";
-import {PossibleDivisionAttribute} from "../../model/PossibleDivisionAttribute";
-
-import {DivisionService} from "../../service/division.service";
-import {SharedService} from "../../service/shared.service";
-import {UtilityService} from "../../service/utility.service";
-import {Logger} from "../../service/logger.service";
-import {AttributeType, ItemSlotType, AttributeConsts} from "../../model/DivisionTypes";
+import {AttributeDescriptor} from "../../model/AttributeDescriptor";
+import { Logger } from "../../service/logger.service";
+import {ItemSlotType, AttributeId, AttributeConsts} from "../../model/DivisionTypes";
 import {NativeBoxComponent} from "../native-box/NativeBoxComponent";
 import {ItemQualityComponent} from "../item-quality/ItemQualityComponent";
-import {SelectBlueprint} from "../select-blueprint/SelectBlueprint";
 import {TalentBoxComponent} from "../talent-box/TalentBoxComponent";
 import {GearModComponent} from "../gear-mod/GearModComponent";
-
-//import {JSURL} from "jsurl";
+import {AttributesSelectorComponent} from "../attributes-selector/AttributesSelectorComponent";
+import {htmlTemplate} from "./gear-item.html";
+import {ItemQualityIconComponent} from "../item-quality-icon/ItemQualityIconComponent";
+import {DivisionItem} from "../../model/DivisionItem";
+import {DivisionService} from "../../service/division.service";
+import {AttributeTypePipe} from "../../pipes/AttributeTypePipe";
+import {ActionCreators} from "../../redux/Actions";
+import {FilterModPipe} from "../../pipes/FilterModPipe";
+import {ItemCardComponent} from "../item-card/ItemCardComponent";
+import {ItemAttributeTypePipe} from "../../pipes/ItemAttributeTypePipe";
+import {ItemValidationPipe} from "../../pipes/ItemValidationPipe";
+import {ItemGearModsPipe} from "../../pipes/ItemGearModsPipe";
 
 @Component({
+    // TODO moduleId: module.id,
     selector: 'gear-item',
-    directives:[GearModComponent, TalentBoxComponent, ItemAttribute, PossibleItemAttribute, NativeBoxComponent, ItemQualityComponent, SelectBlueprint],
-    templateUrl: 'app/components/gear-item/gear-item.html'
+    directives:[AttributesSelectorComponent, GearModComponent, TalentBoxComponent, 
+        NativeBoxComponent, ItemQualityComponent, ItemQualityIconComponent, ItemCardComponent],
+    providers: [],
+    pipes: [AttributeTypePipe, FilterModPipe, ItemAttributeTypePipe, ItemValidationPipe, ItemGearModsPipe],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    //styleUrls:['gear-item.css'], // TODO funzt noch nich wegen module.id fehlt
+    template: htmlTemplate
 })
-export class GearItemComponent implements OnInit {
-    constructor(private _divisionService: DivisionService,
-                private _logger: Logger,
-                private _sharedService: SharedService,
-                private _utilService: UtilityService) { }
+export class GearItemComponent {
+    constructor(private logger: Logger, private divisionService: DivisionService) {
+
+    }
     
-    @Input() itemSlotType: ItemSlotType;
-    @Input() slotId: string;
+    @Input() itemType: ItemSlotType;
+    @Input() itemId: string;
+    @Input() filter: string;
+
+    @Input() item: DivisionItem = null;
+
+    @Output() action = new EventEmitter();
     
-    selectedBlueprint: Blueprint;
-    selectedTalent: string;
+    editing: boolean;
 
-    editingMajors: boolean = false;
-    editingMinors: boolean = false;
-    editingNatives: boolean = false;
-    editingSkills: boolean = false;
-    
-    result: DivisionItem = {
-        "majors": [
-            //["chd", 4]
-        ],
-        "minors": [
-
-        ],
-        "natives": [
-
-        ],
-        "skills": [
-
-        ],
-        "mods": [
-
-        ]
-    }
-
-    ngOnInit() {
-        //this.result.blueprintId = "";
-
-        let paramResult = this._sharedService.getResult(this.slotId);
-        if(paramResult != null){
-            this._logger.log(`Found data: ${JSON.stringify(paramResult)}`)
-            this.result = this._sharedService.getResult(this.slotId);
-
-            let blueprint: Blueprint[] = this._divisionService.getBlueprintsBySlot(this.itemSlotType).filter((bp) => bp.id == this.result.blueprintId);
-            if(blueprint == null || blueprint.length != 1){
-                this._logger.log(`Found too many blueprints: ${JSON.stringify(blueprint)}`)
-                // TODO errorhandling wenn bp id nicht geufnden wird
-            } else {
-                this.selectedBlueprint = blueprint[0];
-            }
-        }
-    }
-
-    resetBlueprint(){
-        this.selectedBlueprint = null;
-    }
-
-
-    saveResultAttribute(attribute: PossibleDivisionAttribute, event: [number, boolean]){
-        let attributeValue:number = event[0];
-        let checked:boolean = event[1];
-
-        var targetArray = null;
-        // attributeType -> major, minor, native, mod, skills
-        switch(attribute.attributeType){
-            case "major":
-                targetArray = this.result.majors;
-                break;
-            case "minor":
-                targetArray = this.result.minors;
-                break;
-            case "native":
-                targetArray = this.result.natives;
-                break;
-            case "skill":
-                targetArray = this.result.skills;
-                break;
-            case "mod":
-                targetArray = this.result.mods;
-                break;
+    get Blueprint() : Blueprint {
+        if(this.item == null){
+            return null;
         }
 
-        let blub = targetArray.find(attr => attr[0] == attribute.attribute);
-
-        if(checked){
-            // If checked -> Add
-            if(blub == null){
-                // attribute ist noch nicht vorhanden, also pushen
-                targetArray.push([attribute.attribute, attributeValue]);
-            } else {
-                // attribut ist vorhanden, also nur value aendern
-                blub[1] = attributeValue;
-            }
-
-        } else {
-            if(blub == null){
-                // attribute ist noch nicht vorhanden, also kann es auch nicht geloescht werden
-                // sollte nicht vorkommen.
-            } else {
-                // attribut ist vorhanden, also loeschen
-                let idx = targetArray.indexOf(blub);
-                targetArray.splice(idx, 1);
-            }
-        }
-
-        this._logger.log(this.slotId);
-        this.updateSharedService(this.slotId, this.result);
+        return this.item.blueprint;
     }
 
-    updateSharedService(from:string, result:DivisionItem): void{
-        this._sharedService.setResult(from, result);
-    }
 
-    getCurrentValueForAttribute(attribute:PossibleDivisionAttribute): number {
-        var targetArray = null;
-
-        switch(attribute.attributeType){
-            case "major":
-                targetArray = this.result.majors;
-                break;
-            case "minor":
-                targetArray = this.result.minors;
-                break;
-            case "native":
-                targetArray = this.result.natives;
-                break;
-            case "skill":
-                targetArray = this.result.skills;
-                break;
-            case "mod":
-                targetArray = this.result.mods;
-                break;
-        }
-
-        let value = targetArray.find(attr => attr[0] == attribute.attribute);
-        return value == null ? null : value[1];
-    }
-
-    getCurrentValue(attribute:string, attributeType:string): number {
-        var targetArray = null;
-
-        switch(attributeType){
-            case "major":
-                targetArray = this.result.majors;
-                break;
-            case "minor":
-                targetArray = this.result.minors;
-                break;
-            case "native":
-                targetArray = this.result.natives;
-                break;
-            case "skill":
-                targetArray = this.result.skills;
-                break;
-            case "mod":
-                targetArray = this.result.mods;
-                break;
-        }
-
-        let value = targetArray.find(attr => attr[0] == attribute);
-        return value == null ? null : value[1];
-    }
-
-    hasTalent() : boolean {
-
-        return this.getPossibleAttributes('gear_talent').length > 0;
-    }
-
-    getPossibleAttributes(attributeType: string): PossibleDivisionAttribute[] {
-        return this.selectedBlueprint.possibleAttributes.filter(possAttr => possAttr.attributeType == attributeType);
-    }
-
-    onTalentChanged(event){
+    isEmpty() : boolean {
+        //this.itemCompanion.getItemAttributes().values().
+        // TODO
         
-    }
-
-    getModRange() : Array<any> {
-        // TODO wtf das muss besser gehen
-
-        let result = [];
-
-        let modSlots = this.getCurrentValue('slot', 'native') + this.getCurrentValue('slot', 'major');
-
-        for(var i = 0 ; i < modSlots ; i++){
-            result.push(i);
-        }
-
-        return result
-    }
-
-    onBlueprintSelected(bp: Blueprint) : void {
-        this.result.natives = [];
-        this.result.majors = [];
-        this.result.minors = [];
-
-        this.result.blueprintId = bp.id;
-
-        this.selectedBlueprint = bp;
-
-        // Annahme: Jedes NativeAttribut MUSS verwendet werden.
-        // Daher werden hier alle NativeAttributes auf den jeweiligen max-Wert gesetzt.
-        // Da aber nur ein Element aus [FIREARMS, STAMINA, ELECTRONICS] gesetzt werden darf
-        // werden diese von dem automatischen Vorgang ausgenommen. (Ist unzulänglichkeit im Datenmodell??)
-        for(var possible of this.getPossibleAttributes('native')){
-            if([AttributeConsts.FIREARMS,AttributeConsts.STAMINA, AttributeConsts.ELECTRONICS].indexOf(possible.attribute) >= 0)
+       /* for (var attributeType in this.itemCompanion.result.attributes) {
+            // Dont count native attributes
+            if(attributeType == 'native')
                 continue;
 
-            this.result.natives.push([possible.attribute, possible.max]);
-        }
+            // All selected values per AttributeType (major, native, minor ...)
+            let currentValues = this.itemCompanion.result.attributes[attributeType];
 
-        /*let armor = this.result.natives.find(attr => attr[0] == "armor");
-
-        if(armor == null){
-            let possible = this.getPossibleAttributes('native').find(attr => attr.attribute == "armor");
-
-            if(possible != null){
-                this.result.natives.push([possible.attribute, possible.max]);
+            if(currentValues.length > 0){
+                // We found an attribute thats not native, so return.
+                return false;
             }
         }*/
+        
+        return false;
+    }
+
+    // TODO implement getSumOfAttributeResult() but restricted on specific category
+    
+    getSumOfAttributeResult(attributeId: AttributeId) : number {
+        //let result = this.itemCompanion.getSumOfAttributes(attributeId);
+        //return result;
+        return 42;
+    }
+
+    title: string = null;
+
+    getCardTitle(){
+        if(this.item == null){
+            return " ... ";
+        }
+
+        let title = null;
+
+        let temp = this.item.attributes
+            .filter(attr => attr.attributeType == "set")
+            .filter(attr => attr.value != null)
+            .filter(attr => attr.value == true);
+
+        // TODO
+        if(temp.length == 1){
+            switch(temp[0].attribute){
+                case "nomad":
+                    break;
+                case "":
+                    break;
+                case "":
+                    break;
+                case "":
+                    break;
+            }
+        }
+
+        return title == null ? this.Blueprint.name : title;
+    }
+
+    getMod(modId: string) : any {       
+        if(this.item.mods == null){
+            return null;
+        }
+        // TODO besser als pipe?
+        return this.item.mods.find(mod => mod.modId == modId)
+    }
+
+    onEditButton(){
+        this.editing = !this.editing;
+    }
+
+    onResetButton(){
+        this.action.emit(ActionCreators.resetBlueprintItem(this.itemId));
+    }
+
+    onBlueprintSelected(event:Blueprint) : void {
+        this.action.emit(ActionCreators.changeBlueprintItem(this.itemId, event));
+    }
+    
+    onAttributeChanged(event: AttributeDescriptor) : void {
+        this.action.emit(ActionCreators.changeAttributeItem(this.itemId, event));
+    }
+
+    onAttributeRemoved(event: AttributeDescriptor) : void {
+        this.action.emit(ActionCreators.removeAttributeItem(this.itemId, event));
+    }
+
+    onModInsertGearMod(event: { modId:string, blueprint:Blueprint }) : void {
+        this.action.emit(ActionCreators.insertGearMod(this.itemId, event.modId, event.blueprint));
+    }
+
+    onModRemoveGearMod(event: { modId:string }){
+        this.action.emit(ActionCreators.removeGearMod(this.itemId, event.modId));
+    }
+
+    onModAttributeChanged(event: { modId:string, attribute: AttributeDescriptor }) : void {
+        this.action.emit(ActionCreators.changeAttributeMod(this.itemId, event.modId, event.attribute));
+    }
+
+    onModAttributeRemoved(event: { modId:string, attribute: AttributeDescriptor }) : void {
+        this.action.emit(ActionCreators.removeAttributeMod(this.itemId, event.modId, event.attribute));
     }
 }

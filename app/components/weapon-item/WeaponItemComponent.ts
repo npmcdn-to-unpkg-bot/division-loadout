@@ -1,241 +1,145 @@
 /**
  * Created by Alex on 03.04.2016.
  */
-import {Component, Input, OnInit} from 'angular2/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {Blueprint} from '../../model/blueprint';
-import {DivisionItem} from '../../model/DivisionItem';
-import {ItemAttribute} from "../item-attribute/item.attribute";
-import {DivisionAttribute} from "../../model/division.attribute";
-import {PossibleItemAttribute} from "../possible-item-attribute/possible.item.attribute";
-import {PossibleDivisionAttribute} from "../../model/PossibleDivisionAttribute";
+import {AttributeDescriptor} from "../../model/AttributeDescriptor";
 
-import {DivisionService} from "../../service/division.service";
-import {SharedService} from "../../service/shared.service";
-import {UtilityService} from "../../service/utility.service";
 import {Logger} from "../../service/logger.service";
 import {AttributeType, ItemSlotType, AttributeConsts, AttributeId} from "../../model/DivisionTypes";
 import {NativeBoxComponent} from "../native-box/NativeBoxComponent";
 import {ItemQualityComponent} from "../item-quality/ItemQualityComponent";
-import {SelectBlueprint} from "../select-blueprint/SelectBlueprint";
+import {SelectBlueprint} from "../item-card/select-blueprint/SelectBlueprint";
 import {WeaponAttributeComponent} from "../weapon-attribute/WeaponAttributeComponent";
 import {TalentBoxComponent} from "../talent-box/TalentBoxComponent";
 import {WeaponModComponent} from "../weapon-mod/WeaponModComponent";
+import {htmlTemplate} from "./weapon-item.html";
+import {ItemQualityIconComponent} from "../item-quality-icon/ItemQualityIconComponent";
+import {DivisionItem} from "../../model/DivisionItem";
+import {AttributesSelectorComponent} from "../attributes-selector/AttributesSelectorComponent";
+import {AttributeTypePipe} from "../../pipes/AttributeTypePipe";
+import {ActionCreators} from "../../redux/Actions";
+import {DivisionService} from "../../service/division.service";
+import {ItemCardComponent} from "../item-card/ItemCardComponent";
+import {ItemAttributeTypePipe} from "../../pipes/ItemAttributeTypePipe";
+import {ItemValidationPipe} from "../../pipes/ItemValidationPipe";
+import {WeaponAttributePipe} from "../../pipes/weapon/WeaponAttributePipe";
+import {WeaponModsPipe} from "../../pipes/weapon/WeaponModsPipe";
 
 @Component({
     selector: 'weapon-item',
-    directives:[WeaponModComponent, WeaponAttributeComponent, NativeBoxComponent, ItemQualityComponent, SelectBlueprint, TalentBoxComponent,
-        ItemAttribute, PossibleItemAttribute],
-    templateUrl: 'app/components/weapon-item/weapon-item.html'
+    directives:[
+        WeaponModComponent, WeaponAttributeComponent, 
+        NativeBoxComponent, ItemCardComponent , TalentBoxComponent, 
+        ItemQualityIconComponent, AttributesSelectorComponent
+    ],
+    providers: [],
+    pipes: [
+        AttributeTypePipe, ItemAttributeTypePipe, ItemValidationPipe, 
+        WeaponAttributePipe,
+        WeaponModsPipe
+    ],
+    template: htmlTemplate
 })
-export class WeaponItemComponent implements OnInit {
-    constructor(private _divisionService: DivisionService,
-                private _logger: Logger,
-                private _sharedService: SharedService,
-                private _utilService: UtilityService) { }
+export class WeaponItemComponent {
+    constructor(private logger: Logger,
+                private divisionService: DivisionService) { }
     
-    @Input() itemSlotType: ItemSlotType;
-    @Input() slotId: string;
+    @Input() itemType: ItemSlotType;
+    @Input() itemId: string;
+    @Input() filter: string;
     
-    selectedBlueprint: Blueprint;
+    @Input() item: DivisionItem = null;
 
-    editingMajors: boolean = false;
-    editingMinors: boolean = false;
-    editingNatives: boolean = false;
-    editingSkills: boolean = false;
+    @Output() action = new EventEmitter();
     
-    result: DivisionItem = {
-        "majors": [
-            //["chd", 4]
-        ],
-        "minors": [
+    editing: boolean = false;
 
-        ],
-        "natives": [
-
-        ],
-        "skills": [
-
-        ],
-        "mods": [
-
-        ]
-    }
-
-    ngOnInit() {
-
-    }
-
-    resetBlueprint(){
-        this.selectedBlueprint = null;
-    }
-
-    saveResultAttribute(attribute: PossibleDivisionAttribute, event: [number, boolean]){
-        let attributeValue:number = event[0];
-        let checked:boolean = event[1];
-
-        var targetArray = null;
-        // attributeType -> major, minor, native, mod, skills
-        switch(attribute.attributeType){
-            case "major":
-                targetArray = this.result.majors;
-                break;
-            case "minor":
-                targetArray = this.result.minors;
-                break;
-            case "native":
-                targetArray = this.result.natives;
-                break;
-            case "skill":
-                targetArray = this.result.skills;
-                break;
-            case "mod":
-                targetArray = this.result.mods;
-                break;
+    get Blueprint() : Blueprint {
+        if(this.item == null){
+            return null;
         }
 
-        let blub = targetArray.find(attr => attr[0] == attribute.attribute);
+        return this.item.blueprint;
+    }
 
-        if(checked){
-            // If checked -> Add
-            if(blub == null){
-                // attribute ist noch nicht vorhanden, also pushen
-                targetArray.push([attribute.attribute, attributeValue]);
-            } else {
-                // attribut ist vorhanden, also nur value aendern
-                blub[1] = attributeValue;
-            }
+    getCardTitle(){
+        return this.item != null ? this.Blueprint.name : " ... ";
+    } 
+    
+    toggleEditMode() : void {
+        this.editing = !this.editing;
+    }
 
-        } else {
-            if(blub == null){
-                // attribute ist noch nicht vorhanden, also kann es auch nicht geloescht werden
-                // sollte nicht vorkommen.
-            } else {
-                // attribut ist vorhanden, also loeschen
-                let idx = targetArray.indexOf(blub);
-                targetArray.splice(idx, 1);
-            }
+    getMod(modId: string) : any {
+        if(this.item.mods == null){
+            return null;
+        }
+        // TODO besser als pipe?
+        return this.item.mods.find(mod => mod.modId == modId)
+    }
+
+    // TODO implement getSumOfAttributeResult() but restricted on specific category
+
+    getSumOfAttributeResult(attributeId: AttributeId) : number {
+        if(this.item == null){
+            return -1;
         }
 
-        this._logger.log(this.slotId);
-        this.updateSharedService(this.slotId, this.result);
-    }
+        let result = this.item.attributes
+            .filter(attr => attr.attribute == attributeId)
+            .filter(attr => attr.value != null)
+            .filter(attr => typeof attr.value === "number")
+            .map(attr => <number>attr.value)
+            .reduce((a, b) => (a + b), 0);
 
-    updateSharedService(from:string, result:DivisionItem): void{
-        //this._sharedService.setResult(from, result);
-    }
 
-    getCurrentValueForAttribute(attribute:PossibleDivisionAttribute): number {
-        var targetArray = null;
-
-        switch(attribute.attributeType){
-            case "major":
-                targetArray = this.result.majors;
-                break;
-            case "minor":
-                targetArray = this.result.minors;
-                break;
-            case "native":
-                targetArray = this.result.natives;
-                break;
-            case "skill":
-                targetArray = this.result.skills;
-                break;
-            case "mod":
-                targetArray = this.result.mods;
-                break;
-        }
-
-        let value = targetArray.find(attr => attr[0] == attribute.attribute);
-        return value == null ? null : value[1];
-    }
-
-    getCurrentValue(attribute:string, attributeType:string): number {
-        var targetArray = null;
-
-        switch(attributeType){
-            case "major":
-                targetArray = this.result.majors;
-                break;
-            case "minor":
-                targetArray = this.result.minors;
-                break;
-            case "native":
-                targetArray = this.result.natives;
-                break;
-            case "skill":
-                targetArray = this.result.skills;
-                break;
-            case "mod":
-                targetArray = this.result.mods;
-                break;
-        }
-
-        let value = targetArray.find(attr => attr[0] == attribute);
-        return value == null ? null : value[1];
-    }
-
-    getPossibleWeaponMods() : { name: string ,slotTypes: AttributeId[] }[] {
-        // Jede Waffe hat Potential die gleichen Modplaetze, allerdings besitzen einige keine Moeglichkeit in ihrem BP einige Slots zu füllen.
-        // Bedeutet: Diese hier gelieferten Werte sind grundsätzlich für alle Waffen gleich.
-        // ABER: Wenn die Waffe keine Möglichkeit für einen Slot hat wird dieser Mod nicht geliefert durch diese Methode.
-
-        // returns [MOD_TYPE, ??]
-
-        // all possible weapon_slot types. Will also include small/large pendants for same slot.
-        let slots = this.selectedBlueprint.possibleAttributes.filter((bp) => bp.attribute.indexOf("weapon_slot") == 0);
-        
-        //let result : AttributeId[][] = [];
-        
-        let result : { name: string ,slotTypes: AttributeId[] }[] = [];
-        
-        // MAGAZIN
-        result.push({ name: "MAGAZIN", slotTypes: [AttributeConsts.WEAPON_SLOT_MAGAZINE]});
-        
-        // MUZZLE
-        result.push({ name: "MUZZLE", slotTypes: [AttributeConsts.WEAPON_SLOT_MUZZLE_SMALL, AttributeConsts.WEAPON_SLOT_MUZZLE_LARGE]});
-        
-        // OPTIC
-        result.push({ name: "OPTIC", slotTypes: [AttributeConsts.WEAPON_SLOT_OPTIC_SHORT, AttributeConsts.WEAPON_SLOT_OPTIC_LONG]});
-        
-        // BARREL
-        result.push({ name: "BARREL", slotTypes: [AttributeConsts.WEAPON_SLOT_BARREL_SHORT, AttributeConsts.WEAPON_SLOT_BARREL_LONG]});
-
-       /* { "attributeType": "native", "attribute": AttributeConsts.WEAPON_SLOT_BARREL_SHORT,      "min": 1,   "max": 1,   "step": 1 },
-        { "attributeType": "native", "attribute": AttributeConsts.WEAPON_SLOT_BARREL_LONG,      "min": 1,   "max": 1,   "step": 1 },
-        { "attributeType": "native", "attribute": AttributeConsts.WEAPON_SLOT_MAGAZINE,         "min": 1,   "max": 1,   "step": 1 },
-        { "attributeType": "native", "attribute": AttributeConsts.WEAPON_SLOT_MUZZLE_SMALL,      "min": 1,   "max": 1,   "step": 1 },
-        { "attributeType": "native", "attribute": AttributeConsts.WEAPON_SLOT_MUZZLE_LARGE,      "min": 1,   "max": 1,   "step": 1 },
-        { "attributeType": "native", "attribute": AttributeConsts.WEAPON_SLOT_OPTIC_SHORT,      "min": 1,   "max": 1,   "step": 1 },
-        { "attributeType": "native", "attribute": AttributeConsts.WEAPON_SLOT_OPTIC_LONG,      "min": 1,   "max": 1,   "step": 1 },*/
+        // TODO besser als pipe?
 
         return result;
     }
 
-    getPossibleAttributes(attributeType: string): PossibleDivisionAttribute[] {
-        return this.selectedBlueprint.possibleAttributes.filter(possAttr => possAttr.attributeType == attributeType);        
+    getDPS(){
+        return 150000;
     }
 
-    getPossibleWeaponAttributes() : PossibleDivisionAttribute[] {
-        return this.selectedBlueprint.possibleAttributes.filter(
-            possAttr => possAttr.attributeType == 'native' && [AttributeConsts.WEAPON_BASE_DMG, AttributeConsts.HEADSHOT_DMG, AttributeConsts.CHC].indexOf(possAttr.attribute) >= 0);
+    onEditButton(){
+        this.editing = !this.editing;
     }
 
-    onBlueprintSelected(bp: Blueprint) : void {
-        this.result.natives = [];
-        this.result.majors = [];
-        this.result.minors = [];
+    onResetButton(){
+        this.action.emit(ActionCreators.resetBlueprintItem(this.itemId));
+    }
 
-        this.selectedBlueprint = bp;
+    onBlueprintSelected(event:Blueprint) : void {
+        this.action.emit(ActionCreators.changeBlueprintItem(this.itemId, event));
+    }
 
-        // Annahme: Jedes NativeAttribut MUSS verwendet werden.
-        // Daher werden hier alle NativeAttributes auf den jeweiligen max-Wert gesetzt.
-        // Da aber nur ein Element aus [FIREARMS, STAMINA, ELECTRONICS] gesetzt werden darf
-        // werden diese von dem automatischen Vorgang ausgenommen. (Ist unzulänglichkeit im Datenmodell??)
-        for(var possible of this.getPossibleAttributes('native')){
-            if([AttributeConsts.FIREARMS,AttributeConsts.STAMINA, AttributeConsts.ELECTRONICS].indexOf(possible.attribute) >= 0)
-                continue;
+    resetBlueprint(){
+        this.action.emit(ActionCreators.resetBlueprintItem(this.itemId));
+    }
 
-            this.result.natives.push([possible.attribute, possible.max]);
-        }
+    onAttributeChanged(event: AttributeDescriptor) : void {
+        this.action.emit(ActionCreators.changeAttributeItem(this.itemId, event));
+    }
+
+    onAttributeRemoved(event: AttributeDescriptor) : void {
+        this.action.emit(ActionCreators.removeAttributeItem(this.itemId, event));
+    }
+
+    onModInsertGearMod(event: { modId:string, blueprint:Blueprint }) : void {
+        this.action.emit(ActionCreators.insertGearMod(this.itemId, event.modId, event.blueprint));
+    }
+
+    onModRemoveGearMod(event: { modId:string }){
+        this.action.emit(ActionCreators.removeGearMod(this.itemId, event.modId));
+    }
+
+    onModAttributeChanged(event: { modId:string, attribute: AttributeDescriptor }) : void {
+        this.action.emit(ActionCreators.changeAttributeMod(this.itemId, event.modId, event.attribute));
+    }
+
+    onModAttributeRemoved(event: { modId:string, attribute: AttributeDescriptor }) : void {
+        this.action.emit(ActionCreators.removeAttributeMod(this.itemId, event.modId, event.attribute));
     }
 }

@@ -1,29 +1,36 @@
 <div class="row">
+    <div class="col-md-8 col-sm-8 col-xs-8 ellipse" (click)="toggleChecked()" style="cursor: pointer;">
 
-    <!-- <button type="button" class="btn btn-secondary btn-sm col-md-1">-</button> -->
-    <input [(ngModel)]="checked"
-           type="checkbox"
-           value=""
-           (change)="onChange($event)"
-           class=" checkbox-item-attribute col-md-1">
+        <i [ngClass]="{ 'fa-square-o': !showChecked() && !single,
+                        'fa-check-square': showChecked() && !single,
+                        'fa-circle-thin': !showChecked() && single,
+                        'fa-check-circle': showChecked() && single
+                        }"
+           class="fa" aria-hidden="true"></i>
+
+        <span class="attr-title">
+            {{getAttributeText(attribute)}}
+        </span>
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-4">
+        <input *ngIf="showChecked() && attribute.datatype?.type == 'number'"
+               type="number"
+               class="input-item-attribute"
+               id="value"
+               [disabled]="isDisabled()"
+               min="{{attribute.datatype?.min}}"
+               max="{{attribute.datatype?.max}}"
+               step="{{attribute.datatype?.step != null ? attribute.datatype.step : 1}}"
+               placeholder="#"
+               (change)="onChangeText($event)"
+               [(ngModel)]="inputValue">
+
+        <div *ngIf="!showChecked() && attribute.datatype?.type == 'number'" class="possible-range-item-attribute">
+            {{attribute.datatype?.min}}
+            <i class="fa fa-chevron-right" aria-hidden="true" style="font-size: 0.6rem; margin: auto 3px;"></i>
+            {{attribute.datatype?.max}}
+        </div>
+    </div>
 
 
-
-
-    <input *ngIf="checked"
-           type="number"
-           class="input-item-attribute col-md-2"
-           id="value"
-           min="{{possibleAttribute.min}}"
-           max="{{possibleAttribute.max}}"
-           step="{{possibleAttribute.step}}"
-           placeholder="#"
-           (change)="onChangeText($event)"
-           [(ngModel)]="attributeValue">
-
-    <!-- <button type="button" class="btn btn-secondary btn-sm col-md-1">+</button> -->
-
-    <span class="attr-title" [ngClass]="{'col-md-9': checked, 'col-md-11': !checked}">
-        {{_utilService.getAttributeText([possibleAttribute.attribute, 0])}}
-    </span>
 </div>

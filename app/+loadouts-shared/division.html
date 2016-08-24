@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div (click)="onClick($event, item)" class="division-card item-card" *ngFor="let item of items | async" style="color: white;">
+                {{ item.$key }}
+            </div>
+        </div>
+
+    </div>
+</div>

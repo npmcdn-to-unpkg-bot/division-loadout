@@ -1,0 +1,35 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div  class="division-card item-card" style="color: white;">
+                <h3 style="text-align: center;"> Local Loadouts </h3>
+
+
+                <div *ngFor="let loadout of getLoadouts() | async" (click)="loadFromStash(loadout)">
+                    {{loadout.title}}
+                </div>
+
+
+                <div style="width: 300px;height: 150px;background-color:  white;display: inline-block;">
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;"></div>
+                </div>
+                <div style="width: 300px;height: 150px;background-color:  darkslategrey;display: inline-block;">
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div  class="division-card item-card" style="color: white;">
+                <h3 style="text-align: center;"> Shared/Starred Loadouts </h3>
+                <div style="height: 400px;">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
