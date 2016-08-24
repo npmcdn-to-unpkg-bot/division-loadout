@@ -1,0 +1,7 @@
+.grid-cell {
+    display: inline-block;
+    height: 48px;
+    width: 48px;
+
+    border: 1px solid white;
+}

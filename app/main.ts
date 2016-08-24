@@ -1,13 +1,8 @@
-import { bootstrap }    from '@angular/platform-browser-dynamic';
-import {AppComponent} from './app.component';
+import {platformBrowserDynamic}    from '@angular/platform-browser-dynamic';
+
 import {enableProdMode} from '@angular/core';
-import {HTTP_PROVIDERS} from '@angular/http';
 import {environment} from "./environment";
-import {provideStore} from '@ngrx/store';
-import {divisionItems} from './redux/DivisionItemReducer';
-import {auth} from './redux/AuthReducer';
-import {stash} from './redux/StashReducer';
-import {APP_ROUTER_PROVIDERS} from "./app.routes";
+import {AppModule} from "./app.module";
 
 //import {instrumentStore, Devtools} from '@ngrx/devtools'
 
@@ -21,9 +16,9 @@ if (environment.production) {
     enableProdMode();
 }
 
-
-bootstrap(AppComponent,[
-    provideStore({divisionItems, auth, stash}),
+platformBrowserDynamic().bootstrapModule(AppModule);
+//bootstrap(AppComponent,[
+ //   provideStore({divisionItems, auth, stash}),
     // TODO eigene Stash-Middleware. Ähnlich eines UndoReducers. Vereinfacht das ganze hin und herkopieren
     // dann kann stash naemlich aus dem store raus (würde dann in den reducer wandern)
     //localStorageMiddleware(['stash'], true),
@@ -37,6 +32,5 @@ bootstrap(AppComponent,[
         method: AuthMethods.Anonymous
     }), */
 
-    APP_ROUTER_PROVIDERS,
-    HTTP_PROVIDERS
-]);
+  //  HTTP_PROVIDERS
+//]);

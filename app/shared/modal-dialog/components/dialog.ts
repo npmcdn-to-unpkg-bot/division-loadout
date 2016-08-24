@@ -2,7 +2,6 @@
  * Created by Alex on 15.05.2016.
  */
 import { Component, OnDestroy, Input, Output, EventEmitter, Type, ViewRef, HostBinding } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
 
 @Component({
     selector: 'dialog',   

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
     selector: "page-not-found",
     directives: [],
     providers: [],
-    template: ''
+    template: 'not found'
 })
 export class PageNotFoundComponent implements OnInit{
     constructor(private router: Router) {

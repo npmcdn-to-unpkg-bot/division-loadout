@@ -18,14 +18,14 @@
                  </div>
             </div>
 
-            <weapon-item
-                    *ngIf="showWeapons"
-                    *ngFor="#item of rangeWeaponCards(); #i = index"
-                    slotId="{{i}}"
-                    itemSlotType="primary"
-                    [filter]="filterWeapons">
-            </weapon-item>
+            <div  *ngIf="showWeapons">
+                <weapon-item
 
+                        *ngFor="let item of rangeWeaponCards(); let i = index"
+                        itemSlotType="primary"
+                        [filter]="filterWeapons">
+                </weapon-item>
+            </div>
         </div>
         <div class="col-md-6 gear-container">
             <!-- gear container -->

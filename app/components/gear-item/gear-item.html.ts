@@ -164,7 +164,7 @@ export const htmlTemplate = `
             
             [editing]="editing"
             [modId]="slot.modId"
-            [mod]="getMod(slot.modId)">
+            [mod]="item | itemModById:slot.modId">
         </gear-mod>
     </div>
     

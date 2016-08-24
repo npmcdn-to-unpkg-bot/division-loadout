@@ -2,9 +2,12 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div  class="division-card item-card" style="color: white;">
-                <h2 style="text-align: center;"> Explore </h2>
+                <h2 style="text-align: center;"> explore </h2>
 
 
+                <div  *ngFor="let bp of getBlueprints()">
+                    <pre style="color:white; padding: 5px;"><code>{{ bp | json}}</code></pre>
+                </div>
             </div>
         </div>
 

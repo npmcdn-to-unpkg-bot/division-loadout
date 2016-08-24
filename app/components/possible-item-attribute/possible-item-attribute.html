@@ -1,5 +1,5 @@
-<div class="row">
-    <div class="col-md-8 col-sm-8 col-xs-8 ellipse" (click)="toggleChecked()" style="cursor: pointer;">
+<div class="ui-g">
+    <div class="ui-g-nopad ui-g-8 ellipse" (click)="toggleChecked()" style="cursor: pointer;">
 
         <i [ngClass]="{ 'fa-square-o': !showChecked() && !single,
                         'fa-check-square': showChecked() && !single,
@@ -12,7 +12,7 @@
             {{getAttributeText(attribute)}}
         </span>
     </div>
-    <div class="col-md-4 col-sm-4 col-xs-4">
+    <div class="ui-g-nopad ui-g-4">
         <input *ngIf="showChecked() && attribute.datatype?.type == 'number'"
                type="number"
                class="input-item-attribute"

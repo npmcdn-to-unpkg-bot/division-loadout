@@ -10,6 +10,17 @@ import {Logger} from "../../service/logger.service";
 @Component({
     selector: 'possible-item-attribute',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    styles:[
+        `.input-item-attribute {
+            border: 0px dashed white;
+            padding: 0;
+            background-color: rgb(31, 31, 31);
+            color: orange;
+            text-align: center;
+            width: 100%; /* Fixes FF bugging around at input width */
+            height: 100%;
+            }`
+    ],
     templateUrl: 'app/components/possible-item-attribute/possible-item-attribute.html'
 })
 export class PossibleItemAttribute implements OnInit {

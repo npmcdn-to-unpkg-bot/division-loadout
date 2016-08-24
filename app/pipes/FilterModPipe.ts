@@ -3,14 +3,16 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 import {AttributeDescriptor} from "../model/AttributeDescriptor";
+import {DivisionItem} from "../model/DivisionItem";
 
 
-@Pipe({name: 'filterMod'})
+@Pipe({name: 'itemModById'})
 export class FilterModPipe implements PipeTransform {
-    transform(mods, modId:string) : any {
-        if(mods == null){
+    transform(item: DivisionItem, modId:string) : {} {
+        if(item == null || item.mods == null){
             return null;
         }
-        return mods.filter(mod => mod.modId === modId);
+
+        return item.mods.find(mod => mod.modId == modId)
     }
 }

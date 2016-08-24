@@ -4,28 +4,13 @@
 import {Component, OnInit} from "@angular/core";
 import {Store} from '@ngrx/store';
 import {Observable} from "rxjs/Observable";
-import {WeaponItemComponent} from "../components/weapon-item/WeaponItemComponent";
-import {GearItemComponent} from "../components/gear-item/GearItemComponent";
-import {SummaryComponent} from "../components/summary/SummaryComponent";
 import {LoadoutState, LoadoutService} from "../service/LoadoutService";
-import {htmlTemplate} from "./loadout-view.html";
 import {DivisionItem} from "../model/DivisionItem";
-import {Logger} from "../service/logger.service";
 import {FirebaseService} from "../service/FirebaseService";
-import {DIALOG_DIRECTIVES} from "../shared/modal-dialog/Dialog";
-import {MDL} from "../util/MDL";
 
 @Component({
     selector: "division-loadout",
-    directives: [
-        WeaponItemComponent,
-        GearItemComponent,
-        SummaryComponent,
-        DIALOG_DIRECTIVES,
-        MDL
-    ],
-    providers: [LoadoutService],
-    template: htmlTemplate
+    templateUrl: 'app/+loadout/loadout-view.html'
 })
 export class DivisionLoadoutView {
 
@@ -35,8 +20,7 @@ export class DivisionLoadoutView {
 
     items: Observable<DivisionItem>[];
     
-    constructor(public store: Store<LoadoutState>,
-                private loadoutService: LoadoutService,
+    constructor(private loadoutService: LoadoutService,
                 private firebaseService: FirebaseService){
         
         this.loadout = this.loadoutService.getLoadout("test");

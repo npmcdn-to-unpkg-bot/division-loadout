@@ -1,8 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Store, Action} from '@ngrx/store';
 import {LoadoutState} from "./LoadoutService";
-import {ActionCreators} from "../redux/Actions";
-import { Router } from '@angular/router';
 import 'rxjs/add/operator/take';
 
 @Injectable()

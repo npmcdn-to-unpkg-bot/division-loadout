@@ -13,7 +13,8 @@
         'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
         '@angular':                   'node_modules/@angular',
         '@angular2-material':         'node_modules/@angular2-material',
-        '@ngrx':                      'node_modules/@ngrx'
+        '@ngrx':                      'node_modules/@ngrx',
+        'primeng':                    'node_modules/primeng'
         //,        'firebase':                   'node_modules/firebase/lib/firebase-web.js'
         //,        'angularfire2':               'node_modules/angularfire2'
     };
@@ -23,8 +24,9 @@
         'app':                        { main: 'main.js',  defaultExtension: 'js' },
         'rxjs':                       { defaultExtension: 'js' },
         'angular2-in-memory-web-api': { defaultExtension: 'js' },
-        '@ngrx/devtools':             { main: 'dist/index.js', defaultExtension: 'js' },
-        '@angular/router':            { main: 'index.js', defaultExtension: 'js' }
+        //'@ngrx/devtools':             { main: 'dist/index.js', defaultExtension: 'js' },
+        '@angular/router':            { main: 'index.js', defaultExtension: 'js' },
+        'primeng':                    { defaultExtension: 'js' }
         //,        'angularfire2':               { main: 'angularfire2.js', defaultExtension: 'js' }
     };
 
@@ -44,6 +46,7 @@
         'common',
         'compiler',
         'core',
+        'forms',
         'http',
         'platform-browser',
         'platform-browser-dynamic'

@@ -1,0 +1,43 @@
+<div draggable="true"
+     data-grid-rows="2"
+     data-grid-columns="3"
+     (dragstart)="drag($event)"
+     style="width: 96px; height: 64px; background-color: yellowgreen;">
+    Item 3x2
+</div>
+<div draggable="true"
+     data-grid-rows="1"
+     data-grid-columns="1"
+     (dragstart)="drag($event)"
+    style="width: 32px; height: 32px; background-color: cadetblue;">
+    1x1
+</div>
+
+<div id="grid-container" >
+    <div *ngFor="let row of range(rows); let i = index">
+        <div class="grid-cell" *ngFor="let column of range(columns); let j = index"
+             (drop)="drop($event)" (dragover)="allowDrop($event)" (dragenter)="dragenter($event)" (dragleave)="dragleave($event)">
+
+
+        </div>
+    </div>
+
+</div>
+
+<!--
+<table style="color: white; background-color: #00cc99;">
+    <tr *ngFor="let row of range(rows); let i = index">
+        <td *ngFor="let column of range(columns); let j = index">
+            div weil FF sonst keine events auf tds oredntlich verarbeitet
+            <div
+                (drop)="drop($event)"
+                (dragover)="allowDrop($event)"
+                (dragenter)="dragenter($event)"
+                (dragleave)="dragleave($event)">
+                [{{i}} x {{j}}]
+            </div>
+        </td>
+    </tr>
+
+</table>
+-->

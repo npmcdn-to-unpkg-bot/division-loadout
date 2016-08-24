@@ -8,7 +8,6 @@ import {Blueprint} from "../model/blueprint";
 
 @Component({
     selector: "division-shared-loadouts",
-    directives: [],
     templateUrl: "app/+loadouts-shared/division.html"
 })
 export class DivisionSharedLoadoutsView {

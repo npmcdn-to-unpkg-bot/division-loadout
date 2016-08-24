@@ -71,6 +71,7 @@ export const itemAttribute:ActionReducer<AttributeDescriptor> = (state = null, a
     // state -> AttributeDescriptor
     // State of one attributes
     switch (action.type) {
+        case ActionTypes.CHANGE_ATTRIBUTE_MOD:
         case ActionTypes.CHANGE_ATTRIBUTE_ITEM:
             if(state.attributeType !== action.payload.attribute.attributeType){
                 return state;
@@ -90,6 +91,7 @@ export const itemAttribute:ActionReducer<AttributeDescriptor> = (state = null, a
             }
 
             return  Object.assign({}, state, mixin);
+        case ActionTypes.REMOVE_ATTRIBUTE_MOD:
         case ActionTypes.REMOVE_ATTRIBUTE_ITEM:
             if(state.attributeType !== action.payload.attribute.attributeType){
                 return state;
@@ -135,6 +137,8 @@ export const itemAttributes:ActionReducer<AttributeDescriptor[]> = (state = [], 
             return result;
         case ActionTypes.CHANGE_ATTRIBUTE_ITEM:
         case ActionTypes.REMOVE_ATTRIBUTE_ITEM:
+        case ActionTypes.CHANGE_ATTRIBUTE_MOD:
+        case ActionTypes.REMOVE_ATTRIBUTE_MOD:
             // Just delegate to the "itemAttribute"-reducer
             return state.map(attribute => {
                 return this.itemAttribute(attribute, action);

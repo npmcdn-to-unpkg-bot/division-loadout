@@ -9,7 +9,6 @@ import {SummaryComponent} from "../components/summary/SummaryComponent";
 
 @Component({
     selector: "division-item",
-    directives: [WeaponItemComponent, GearItemComponent, SummaryComponent],
     templateUrl: "app/+item/item-view.html"
 })
 export class DivisionItemView {

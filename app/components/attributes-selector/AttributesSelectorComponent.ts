@@ -10,8 +10,6 @@ import {htmlTemplate} from './attributes-selector.html';
 
 @Component({
     selector: 'attributes-selector',
-    directives:[ItemAttribute, PossibleItemAttribute],
-    providers:[],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: htmlTemplate
 })

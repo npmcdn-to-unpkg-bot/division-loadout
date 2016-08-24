@@ -33,7 +33,6 @@ export class ItemGearModsPipe implements PipeTransform {
                 return { modId: "gear_mod_" + idx++ };
             });
 
-        console.log("itemGearMods", gearModDescriptors);
         return gearModDescriptors;
     }
 }

@@ -26,7 +26,7 @@ import {ItemGearModsPipe} from "../../pipes/ItemGearModsPipe";
 @Component({
     // TODO moduleId: module.id,
     selector: 'gear-item',
-    directives:[AttributesSelectorComponent, GearModComponent, TalentBoxComponent, 
+    directives:[AttributesSelectorComponent, GearModComponent, TalentBoxComponent,
         NativeBoxComponent, ItemQualityComponent, ItemQualityIconComponent, ItemCardComponent],
     providers: [],
     pipes: [AttributeTypePipe, FilterModPipe, ItemAttributeTypePipe, ItemValidationPipe, ItemGearModsPipe],
@@ -116,14 +116,6 @@ export class GearItemComponent {
         }
 
         return title == null ? this.Blueprint.name : title;
-    }
-
-    getMod(modId: string) : any {       
-        if(this.item.mods == null){
-            return null;
-        }
-        // TODO besser als pipe?
-        return this.item.mods.find(mod => mod.modId == modId)
     }
 
     onEditButton(){

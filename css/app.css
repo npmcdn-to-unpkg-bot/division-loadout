@@ -186,15 +186,6 @@ body {
     color: grey;
 }
 
-.input-item-attribute {
-    border: 0px dashed white;
-    padding: 0;
-    background-color: rgb(31, 31, 31);
-    color: orange;
-    text-align: center;
-    width: 100%; /* Fixes FF bugging around at input width */
-}
-
 .possible-range-item-attribute {
     padding: 0;
     color: rgba(255, 165, 0, 0.5);
@@ -219,17 +210,6 @@ a.router-link-active {
 .md-sidenav-side {
     width: 250px;
 
-}
-
-md-sidenav-layout {
-    /* TODO fix this (remove)*/
-    min-height: 600px;
-}
-
-.example-fill-remaining-space {
-/* This fills the remaining space, by using flexbox.
- Every toolbar row uses a flexbox row layout. */
-flex: 1 1 auto;
 }
 
 .edit-blueprint-icon {

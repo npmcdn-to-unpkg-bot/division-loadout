@@ -18,13 +18,6 @@ import {ActivatedRoute} from "@angular/router";
 
 @Component({
     selector: "division-loadout",
-    directives: [
-        WeaponItemComponent,
-        GearItemComponent,
-        SummaryComponent,
-        DIALOG_DIRECTIVES,
-        MDL
-    ],
     providers: [LoadoutService],
     template: htmlTemplate
 })
